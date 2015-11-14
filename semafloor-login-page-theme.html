@@ -13,12 +13,69 @@
 
         display: block;
         overflow: hidden;
+        background: #ffeb3b;
+
         @apply(--layout-vertical);
       }
 
       *, *::before, *::after {
         box-sizing: border-box;
       }
+
+      .semafloor-login-page-container {
+
+      }
+
+      .info-page-content {
+        text-align: center;
+      }
+
+      .page-one {
+        padding: 40px;
+        background: #ffeb3b;
+        color: #000000;
+      }
+
+      .page-two {
+        padding: 40px;
+        background: #009688;
+        color: #ffffff;
+      }
+
+      .page-three {
+        padding: 40px;
+        background: #03a9f4;
+        color: #ffb74d;
+      }
+
+      paper-button {
+        color: #009688;
+        --paper-button: {
+          background: #ffffff;
+        }
+      }
+
+      .info-page-indicator-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+
+      paper-slider.page-indicator {
+        --paper-slider-bar-color: transparent;
+        --paper-slider-active-color: transparent;
+        --paper-slider-secondary-color: transparent;
+        --paper-slider-disabled-active-color: transparent;
+        --paper-slider-disabled-secondary-color: transparent;
+        /*--paper-slider-disabled-knob-color: var(--google-blue-700);*/
+        --paper-slider-disabled-knob-color: #ffffff;
+        --paper-progress-container-color: transparent;
+        --paper-slider-knob-color: var(--google-blue-700);
+        --paper-slider-knob-start-color: var(--google-blue-700);
+        --paper-slider-knob-start-border-color: transparent;
+      }
+
     </style>
 
   </template>
