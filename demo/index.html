@@ -16,32 +16,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../semafloor-login-page.html">
   </head>
-  <body unresolved>
-
-    <p>An example of <code>&lt;semafloor-login-page&gt;</code>:</p>
-
-    <p>Make words! <button id="saybtn">Say Something</button></p>
-    <p>Make lasers! <button id="laserbtn">Fire lasers</button></p>
-
-    <semafloor-login-page author='{"name": "Lord Meowser", "image": "http://placekitten.com/g/200/300"}' fancy>
+  <body unresolved class="fullbleed layout vertical">
+    <!-- <semafloor-login-page author='{"name": "Lord Meowser", "image": "http://placekitten.com/g/200/300"}' fancy>
       <h2>Hello semafloor-login-page</h2>
-    </semafloor-login-page>
+    </semafloor-login-page> -->
+    <div class="layout vertical flex-auto">
+      <semafloor-login-page class="flex-auto"></semafloor-login-page>
+    </div>
 
     <script>
       var seedElement = document.querySelector('semafloor-login-page');
-      
-      document.querySelector('#saybtn').addEventListener('click', function() {
-        alert(seedElement.sayHello('Hallo!'));
-      });
-      
-      document.querySelector('#laserbtn').addEventListener('click', function() {
-        seedElement.fireLasers();
-      });
-      
-      document.addEventListener("semafloor-login-page-lasers", function(e) {
-        console.log(e.detail.sound);
-      });
-      
+
     </script>
 
   </body>
