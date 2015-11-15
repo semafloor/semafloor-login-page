@@ -38,12 +38,34 @@
         color: #ffb74d;
       }
 
-      paper-button {
+      .info-page-indicator-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+
+      paper-slider.page-indicator {
+        --paper-slider-bar-color: transparent;
+        --paper-slider-active-color: transparent;
+        --paper-slider-secondary-color: transparent;
+        --paper-slider-disabled-active-color: transparent;
+        --paper-slider-disabled-secondary-color: transparent;
+        /*--paper-slider-disabled-knob-color: var(--google-blue-700);*/
+        --paper-slider-disabled-knob-color: #ffffff;
+        --paper-progress-container-color: transparent;
+        --paper-slider-knob-color: var(--google-blue-700);
+        --paper-slider-knob-start-color: var(--google-blue-700);
+        --paper-slider-knob-start-border-color: transparent;
+      }
+
+      paper-button.go-login-button {
         color: #009688;
         --paper-button: {
           background: #ffffff;
         }
       }
+
 
     </style>
 

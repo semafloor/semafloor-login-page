@@ -8,14 +8,18 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="semafloor-login-page-theme.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
-<link rel="import" href="../neon-animation/neon-animations.html">
-<link rel="import" href="../neon-animation/neon-animated-pages.html">
 <link rel="import" href="../paper-slider/paper-slider.html">
 <link rel="import" href="../paper-button/paper-button.html">
+
+<link rel="import" href="semafloor-login-page-theme.html">
 <link rel="import" href="info-pages.html">
 <link rel="import" href="info-pages-behavior.html">
+<link rel="import" href="login-pages.html">
+
+<link rel="import" href="../neon-animation/neon-animations.html">
+
+<link rel="import" href="../neon-animation/neon-animated-pages.html">
 
 <!--
 An element providing a solution to no problem in particular.
@@ -39,19 +43,18 @@ Example:
         <!-- <button data-btn="prev" on-tap="_btn">Prev</button>
         <button data-btn="next" on-tap="_btn">Next</button> -->
         <div class="info-page-content flex-auto layout vertical">
-           <neon-animated-pages id="infoPages" class="layout vertical flex-auto"
+           <neon-animated-pages id="pages" class="layout vertical flex-auto"
              selected="{{_pages}}"
-             entry-animation="[[_entryAnimation]]"
-             exit-animation="[[_exitAnimation]]"
              attr-for-selected="data-page">
-             <info-pages class="info-pages"
+
+             <info-pages id="infoPages" class="info-pages"
                data-page="info"
                on-track="_trackHandler" on-down="_downHandler" on-up="_upHandler"></info-pages>
+
+            <login-pages id="loginPages" class="login-page"
+              data-page="login"></login-pages>
+
            </neon-animated-pages>
-        </div>
-        <div class="info-page-indicator-container layout horizontal center-center">
-          <paper-slider id="infoPageIndicator" class="page-indicator"
-            min="0" max="2" value="0" snaps noink disabled></paper-slider>
         </div>
       </template>
 
@@ -82,22 +85,20 @@ Example:
         type: String,
         value: 'info'
       },
-      _entryAnimation: {
-        type: String,
-        value: 'slide-from-right-animation'
-      },
-      _exitAnimation: {
-        type: String,
-        value: 'slide-left-animation'
-      },
-
+      // _entryAnimation: {
+      //   type: String,
+      //   value: 'slide-from-right-animation'
+      // },
+      // _exitAnimation: {
+      //   type: String,
+      //   value: 'slide-left-animation'
+      // },
     },
 
     listeners: {
       'next-info-page': '_onNextInfoPage',
       'prev-info-page': '_onPrevInfoPage',
-      'info-page-indicator-increment': '_onInfoPageIndicatorIncrement',
-      'info-page-indicator-decrement': '_onInfoPageIndicatorDecrement'
+      'show-login-pages': '_showLoginPages'
     },
 
     _onNextInfoPage: function(ev) {
@@ -108,12 +109,10 @@ Example:
       this.$$('info-pages').previousInfoPage();
     },
 
-    _onInfoPageIndicatorIncrement: function (ev) {
-      this.$$('#infoPageIndicator').increment();
-    },
-
-    _onInfoPageIndicatorDecrement: function (ev) {
-      this.$$('#infoPageIndicator').decrement();
+    _showLoginPages: function (ev) {
+      // this._entryAnimation = '';
+      // this._exitAnimation = '';
+      this._pages = 'login';
     },
 
     // Element Lifecycle
@@ -171,10 +170,6 @@ Example:
      */
     fireLasers: function() {
       this.fire('semafloor-login-page-lasers', {sound: 'Pew pew!'});
-    },
-
-    _goLoginPage: function (ev) {
-
     },
 
   });
