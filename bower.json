@@ -23,7 +23,10 @@
     "paper-slider": "PolymerElements/paper-slider#~1.0.7",
     "paper-radio-button": "PolymerElements/paper-radio-button#~1.0.11",
     "paper-radio-group": "PolymerElements/paper-radio-group#~1.0.6",
-    "paper-header-panel": "PolymerElements/paper-header-panel#~1.0.5"
+    "paper-header-panel": "PolymerElements/paper-header-panel#~1.0.5",
+    "iron-image": "PolymerElements/iron-image#~1.0.3",
+    "paper-fab": "PolymerElements/paper-fab#~1.0.6",
+    "paper-toolbar": "PolymerElements/paper-toolbar#~1.0.4"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

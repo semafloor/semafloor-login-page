@@ -11,6 +11,8 @@
   <template strip-whitespace>
     <style include="info-pages-theme"></style>
 
+    <div id="placeholder" class="fit"></div>
+
     <neon-animated-pages id="infoPages" class="layout vertical flex-auto"
       selected="{{_infoPage}}"
       entry-animation="[[_entryAnimation]]"
@@ -61,12 +63,16 @@
                 node: this
               },
               'exit': [{
-                name: 'hero-animation',
-                id: 'hero',
-                fromPage: this
+                name: 'fade-out-animation',
+                node: this,
+                timing: {
+                  // delay: 150,
+                  // duration: 0
+                }
               }, {
-                name: 'scale-up-animation',
-                node: this
+                name: 'ripple-animation',
+                id: 'infoToLogin',
+                fromPage: this
               }]
             }
           }
@@ -74,9 +80,8 @@
 
         sharedElements: {
           value: function() {
-            console.log(this.$.goLoginButton);
             return {
-              'hero': this.$.goLoginButton
+              'infoToLogin': this.$.goLoginButton
             }
           }
         },

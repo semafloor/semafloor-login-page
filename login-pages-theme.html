@@ -12,6 +12,8 @@
         box-sizing: border-box;
 
         display: block;
+        overflow: auto;
+        padding: 40px 0;
         @apply(--layout-vertical);
       }
 
@@ -20,15 +22,91 @@
       }
 
       .login-pages-container {
-        background: #009688;
+      }
+
+      #placeholder {
+        opacity: 0;
+        /*background: #ffffff;*/
+        background: black;
+        pointer-events: none;
+      }
+
+      iron-image.product-image {
+        background: transparent;
+        width: 128px;
+        height: 128px;
+      }
+
+      p.product-brief-description {
+        padding-left: 40px;
+        padding-right: 40px;
+        text-align: justify;
+      }
+
+      div.social-sites-container {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      iron-image.facebook-icon,
+      iron-image.twitter-icon,
+      iron-image.gplus-icon,
+      iron-image.github-icon,
+      iron-image.email-icon {
+        /*box-sizing: content-box;*/
+        margin: 12px;
+        width: 72px;
+        height: 72px;
+        background: transparent;
+        border-radius: 50%;
+        @apply(--shadow-elevation-3dp);
+        @apply(--shadow-transition);
+      }
+
+      iron-image.facebook-icon.pressed,
+      iron-image.twitter-icon.pressed,
+      iron-image.gplus-icon.pressed,
+      iron-image.github-icon.pressed,
+      iron-image.email-icon.pressed {
+        @apply(--shadow-elevation-8dp);
+      }
+
+      iron-image.email-icon {
+        /*color: #1A237E;*/
+        color: #ffff00;
+      }
+
+      iron-image.facebook-icon {
+        /*color: #29B6F6;*/
+        color: #76ff03;
+      }
+
+      iron-image.github-icon {
+        color: #CC4337;
+      }
+
+      iron-image.gplus-icon {
+        /*color: #000000;*/
+        color: #ffffff;
+      }
+
+      iron-image.twitter-icon {
+        /*color: #009688;*/
+        color: #7c4dff;
+      }
+
+      paper-button {
+        border-radius: 50%;
+      }
+
+      paper-fab {
+        --paper-fab-iron-icon {
+          --iron-icon-width: 100%;
+          --iron-icon-height: 100%;
+        }
       }
 
     </style>
 
   </template>
-  <script>
-    Polymer({
-      is: 'login-pages-theme'
-    });
-  </script>
 </dom-module>

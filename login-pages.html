@@ -1,5 +1,8 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="login-pages-theme.html">
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
+<link rel="import" href="../paper-ripple/paper-ripple.html">
 
 <link rel="import" href="../neon-animation/neon-animations.html">
 
@@ -10,7 +13,42 @@
   <template>
     <style include="login-pages-theme"></style>
 
+    <div id="placeholder" class="fit"></div>
+
     <div id="loginPagesContainer" class="login-pages-container layout vertical flex-auto">
+      <div class="product-image-container layout vertical center-center">
+        <iron-image class="product-image" src="product_image_192.png" preload sizing="cover" fade></iron-image>
+        <p class="product-brief-description">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium iure odio nesciunt, sequi ut expedita.
+        </p>
+      </div>
+      <div class="social-sites-container layout horizontal around-justified wrap" on-down="_iconDown" on-up="_iconUp">
+        <iron-image class="facebook-icon"
+          data-icon="facebook"
+          src="social-sites-icons/facebook.png" preload sizing="cover" fade>
+          <paper-ripple></paper-ripple>
+        </iron-image>
+        <iron-image class="twitter-icon"
+          data-icon="twitter"
+          src="social-sites-icons/twitter.png" preload sizing="cover" fade>
+          <paper-ripple></paper-ripple>
+        </iron-image>
+        <iron-image class="gplus-icon"
+          data-icon="gplus"
+          src="social-sites-icons/gplus.png" preload sizing="cover" fade>
+          <paper-ripple></paper-ripple>
+        </iron-image>
+        <iron-image class="github-icon"
+          data-icon="github"
+          src="social-sites-icons/github.png" preload sizing="cover" fade>
+          <paper-ripple></paper-ripple>
+        </iron-image>
+        <iron-image class="email-icon"
+          data-icon="email"
+          src="social-sites-icons/email.png" preload sizing="cover" fade>
+          <paper-ripple></paper-ripple>
+        </iron-image>
+      </div>
     </div>
 
   </template>
@@ -25,12 +63,22 @@
           value: function () {
             return {
               'entry': [{
-                name: 'heron-animation',
-                id: 'hero',
+                name: 'ripple-animation',
+                id: 'infoToLogin',
                 toPage: this
               }, {
+                name: 'fade-out-animation',
+                node: this.$.placeholder,
+                // timing: {
+                //   duration: 300
+                // }
+              }, {
                 name: 'fade-in-animation',
-                node: this
+                node: this.$.loginPagesContainer,
+                // timing: {
+                //   delay: 150,
+                //   duration: 1200
+                // }
               }],
               'exit': {
                 name: 'fade-out-animation',
@@ -43,10 +91,61 @@
         sharedElements: {
           value: function () {
             return {
-              'hero': this.$.loginPagesContainer
+              'infoToLogin': this.$.placeholder
             }
           }
         }
+      },
+
+      _iconDown: function (ev) {
+        // console.log('icon-tap', ev);
+        var _imgTarget = ev.target;
+
+        while (_imgTarget && _imgTarget.tagName !== 'IRON-IMAGE') {
+          _imgTarget = _imgTarget.parentElement;
+        }
+
+        if (_imgTarget) {
+          // console.log(_imgTarget);
+          _imgTarget.classList.add('pressed');
+          // console.log(_imgTarget.classList);
+        }
+      },
+
+      _iconUp: function (ev) {
+        var _imgTarget = ev.target, _iconName;
+
+        while (_imgTarget && _imgTarget.tagName !== 'IRON-IMAGE') {
+          _imgTarget = _imgTarget.parentElement;
+        }
+
+        if (_imgTarget && _imgTarget.hasAttribute('data-icon')) {
+          _iconName = _imgTarget.getAttribute('data-icon');
+          // console.log(_imgTarget);
+          _imgTarget.classList.remove('pressed');
+          this.fire('show-provider-login', {provider: _iconName});
+          // switch (_iconName) {
+          //   case 'facebook':
+          //     this.fire('show-facebook-login');
+          //     break;
+          //   case 'twitter':
+          //     this.fire('show-twitter-login');
+          //     break;
+          //   case 'gplus':
+          //     this.fire('show-gplus-login');
+          //     break;
+          //   case 'github':
+          //     this.fire('show-github-login');
+          //     break;
+          //   case 'email':
+          //     this.fire('show-email-login');
+          //     break;
+          //   default:
+          // console.log(_imgTarget.classList);
+          // }
+        }
+
+
       }
     });
   </script>

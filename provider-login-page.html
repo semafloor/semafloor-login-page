@@ -1,0 +1,39 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="provider-login-page-theme.html">
+<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+
+
+<dom-module id="provider-login-page">
+  <template>
+    <style include="provider-login-page-theme"></style>
+
+    <paper-header-panel class="flex" mode="waterfall">
+      <paper-toolbar>
+        <div class="">
+          <span>[[providerName]]</span>
+        </div>
+      </paper-toolbar>
+      
+      <div class="content">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci minima natus architecto molestiae, corrupti debitis vitae eveniet dicta. Eligendi, accusamus.
+        </p>
+      </div>
+    </paper-header-panel>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'provider-login-page',
+
+      properties: {
+        providerName: {
+          type: String,
+          value: 'Semafloor'
+        },
+      },
+
+    });
+  </script>
+</dom-module>

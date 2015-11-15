@@ -16,6 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="info-pages.html">
 <link rel="import" href="info-pages-behavior.html">
 <link rel="import" href="login-pages.html">
+<link rel="import" href="provider-login-page.html">
 
 <link rel="import" href="../neon-animation/neon-animations.html">
 
@@ -54,6 +55,8 @@ Example:
             <login-pages id="loginPages" class="login-page"
               data-page="login"></login-pages>
 
+            <provider-login-page id="providerLoginPage" class="provider-login-page"
+              data-page="provider"></provider-login-page>
            </neon-animated-pages>
         </div>
       </template>
@@ -85,20 +88,13 @@ Example:
         type: String,
         value: 'info'
       },
-      // _entryAnimation: {
-      //   type: String,
-      //   value: 'slide-from-right-animation'
-      // },
-      // _exitAnimation: {
-      //   type: String,
-      //   value: 'slide-left-animation'
-      // },
     },
 
     listeners: {
       'next-info-page': '_onNextInfoPage',
       'prev-info-page': '_onPrevInfoPage',
-      'show-login-pages': '_showLoginPages'
+      'show-login-pages': '_showLoginPages',
+      'show-provider-login': '_showProviderLogin'
     },
 
     _onNextInfoPage: function(ev) {
@@ -110,9 +106,12 @@ Example:
     },
 
     _showLoginPages: function (ev) {
-      // this._entryAnimation = '';
-      // this._exitAnimation = '';
       this._pages = 'login';
+    },
+
+    _showProviderLogin: function (ev) {
+      this._pages = 'provider';
+      console.log(ev.detail.provider);
     },
 
     // Element Lifecycle
