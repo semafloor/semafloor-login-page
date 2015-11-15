@@ -1,0 +1,85 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="info-pages-theme.html">
+
+<dom-module id="info-pages">
+  <template strip-whitespace>
+    <style include="info-pages-theme"></style>
+
+    <neon-animated-pages id="infoPages" class="layout vertical flex-auto"
+      selected="{{_infoPage}}"
+      entry-animation="[[_entryAnimation]]"
+      exit-animation="[[_exitAnimation]]"
+      attr-for-selected="data-info">
+      <div class="page-one" data-info="one">
+        <h1>Page One</h1>
+        <p>
+          Lorem ipsum dolor sit amet.
+        </p>
+      </div>
+      <div class="page-two" data-info="two">
+        <h1>Page Two</h1>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, totam.
+        </p>
+      </div>
+      <div class="page-three" data-info="three">
+        <h1>Page Three</h1>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit recusandae illo, aliquid sunt id sit provident. Placeat, corporis nostrum. Fugit.
+        </p>
+        <paper-button raised on-tap="_goLoginPage">Get Started</paper-button>
+      </div>
+    </neon-animated-pages>
+  </template>
+  <script>
+    Polymer({
+      is: 'info-pages',
+
+      properties: {
+        _infoPage: {
+          type: String,
+          value: 'one'
+        },
+      },
+
+      _btn: function (ev) {
+        var _target = ev.target;
+        if (_target.tagName === 'BUTTON') {
+          if (_target.hasAttribute('data-btn')) {
+            var _info = _target.getAttribute('data-btn');
+            if (_info === 'prev' && this._infoPage !== 'one') {
+              this._previousInfoPage();
+            }else if (_info === 'next' && this._infoPage !== 'three' ){
+              this._nextInfoPage();
+            }
+          }
+        }
+      },
+
+      nextInfoPage: function () {
+        if (this._infoPage === 'three') {
+          return;
+        }
+
+        this.$.infoPages.cancelAnimation();
+        this._entryAnimation = 'slide-from-right-animation';
+        this._exitAnimation = 'slide-left-animation';
+        this.$.infoPages.selectNext();
+        this.fire('info-page-indicator-increment');
+      },
+
+      previousInfoPage: function () {
+        if (this._infoPage === 'one') {
+          return;
+        }
+
+        this.$.infoPages.cancelAnimation();
+        this._entryAnimation = 'slide-from-left-animation';
+        this._exitAnimation = 'slide-right-animation';
+        this.$.infoPages.selectPrevious();
+        this.fire('info-page-indicator-decrement');
+      },
+
+    });
+  </script>
+</dom-module>

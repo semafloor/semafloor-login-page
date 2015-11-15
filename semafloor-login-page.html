@@ -14,6 +14,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../neon-animation/neon-animated-pages.html">
 <link rel="import" href="../paper-slider/paper-slider.html">
 <link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="info-pages.html">
+<link rel="import" href="info-pages-behavior.html">
 
 <!--
 An element providing a solution to no problem in particular.
@@ -29,43 +31,27 @@ Example:
 -->
 <dom-module id="semafloor-login-page">
 
-  <template>
+  <template strip-whitespace>
     <style include="semafloor-login-page-theme"></style>
 
     <div class="semafloor-login-page-container flex-auto layout vertical">
       <template is="dom-if" if="{{_firstTimeLogin}}" restamp="true">
         <!-- <button data-btn="prev" on-tap="_btn">Prev</button>
         <button data-btn="next" on-tap="_btn">Next</button> -->
-        <div class="info-page-content flex-auto layout vertical" on-track="_trackHandler" on-down="_downHandler" on-up="_upHandler">
-           <neon-animated-pages id="infoPages"
-             class="layout vertical flex-auto"
-             selected="{{_infoPage}}"
+        <div class="info-page-content flex-auto layout vertical">
+           <neon-animated-pages id="infoPages" class="layout vertical flex-auto"
+             selected="{{_pages}}"
              entry-animation="[[_entryAnimation]]"
              exit-animation="[[_exitAnimation]]"
-             attr-for-selected="data-info">
-              <div class="page-one" data-info="one">
-                <h1>Page One</h1>
-                <p>
-                  Lorem ipsum dolor sit amet.
-                </p>
-              </div>
-              <div class="page-two" data-info="two">
-                <h1>Page Two</h1>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, totam.
-                </p>
-              </div>
-              <div class="page-three" data-info="three">
-                <h1>Page Three</h1>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit recusandae illo, aliquid sunt id sit provident. Placeat, corporis nostrum. Fugit.
-                </p>
-                <paper-button raised on-tap="_goLoginPage">Get Started</paper-button>
-              </div>
+             attr-for-selected="data-page">
+             <info-pages class="info-pages"
+               data-page="info"
+               on-track="_trackHandler" on-down="_downHandler" on-up="_upHandler"></info-pages>
            </neon-animated-pages>
         </div>
         <div class="info-page-indicator-container layout horizontal center-center">
-          <paper-slider id="infoPageIndicator" class="page-indicator" min="0" max="2" value="0" snaps noink disabled></paper-slider>
+          <paper-slider id="infoPageIndicator" class="page-indicator"
+            min="0" max="2" value="0" snaps noink disabled></paper-slider>
         </div>
       </template>
 
@@ -85,14 +71,16 @@ Example:
 
     is: 'semafloor-login-page',
 
+    behaviors: [Semafloor.infoPagesBehavior],
+
     properties: {
       _firstTimeLogin: {
         type: Boolean,
         value: true
       },
-      _infoPage: {
+      _pages: {
         type: String,
-        value: 'one'
+        value: 'info'
       },
       _entryAnimation: {
         type: String,
@@ -102,16 +90,30 @@ Example:
         type: String,
         value: 'slide-left-animation'
       },
-      _swipeNextAllowed: {
-        type: Boolean,
-        value: false
-      },
-      _swipePreviousAllowed: {
-        type: Boolean,
-        value: false
-      },
-      _swipeThreshold: Number,
 
+    },
+
+    listeners: {
+      'next-info-page': '_onNextInfoPage',
+      'prev-info-page': '_onPrevInfoPage',
+      'info-page-indicator-increment': '_onInfoPageIndicatorIncrement',
+      'info-page-indicator-decrement': '_onInfoPageIndicatorDecrement'
+    },
+
+    _onNextInfoPage: function(ev) {
+      this.$$('info-pages').nextInfoPage();
+    },
+
+    _onPrevInfoPage: function (ev) {
+      this.$$('info-pages').previousInfoPage();
+    },
+
+    _onInfoPageIndicatorIncrement: function (ev) {
+      this.$$('#infoPageIndicator').increment();
+    },
+
+    _onInfoPageIndicatorDecrement: function (ev) {
+      this.$$('#infoPageIndicator').decrement();
     },
 
     // Element Lifecycle
@@ -169,97 +171,6 @@ Example:
      */
     fireLasers: function() {
       this.fire('semafloor-login-page-lasers', {sound: 'Pew pew!'});
-    },
-
-    _downHandler: function (ev) {
-      // this.setScrollDirection('all|x|y|none', node);
-      // console.log(ev);
-      var _target = ev.target;
-
-      if (_target) {
-        _target = _target.parentElement;
-        // set maximum distance needed to trigger page swipe.
-        this.set('_swipeThreshold', (parseFloat(_target.getBoundingClientRect().width) * 2 / 10).toFixed(0))
-      }
-    },
-
-    _trackHandler: function (ev) {
-      var _infoPages = this.$$('#infoPages'),
-          _threshold = this._swipeThreshold;
-
-      // both of which must be false.
-      if (this._swipeNextAllowed || this._swipePreviousAllowed) {
-        return;
-      }
-
-      switch (ev.detail.state) {
-        case 'start':
-
-          break;
-        case 'track':
-          if (ev.detail.dx < -_threshold) {
-            if (this._infoPage !== 'three') {
-              this.set('_swipeNextAllowed', true);
-              console.log('>');
-            }
-          }
-
-          if (ev.detail.dx > _threshold) {
-            if (this._infoPage !== 'one') {
-              console.log('<');
-              this.set('_swipePreviousAllowed', true);
-            }
-          }
-          break;
-        case 'end':
-
-          break;
-        default:
-
-      }
-    },
-
-    _upHandler: function (ev) {
-      var _infoPages = this.$$('#infoPages');
-      if (this._swipeNextAllowed) {
-        // console.log('>...');
-        this._nextInfoPage();
-        this.set('_swipeNextAllowed', false);
-      } else if (this._swipePreviousAllowed) {
-        // console.log('<...');
-        this._previousInfoPage();
-        this.set('_swipePreviousAllowed', false);
-      }
-    },
-
-    _btn: function (ev) {
-      var _target = ev.target;
-      if (_target.tagName === 'BUTTON') {
-        if (_target.hasAttribute('data-btn')) {
-          var _info = _target.getAttribute('data-btn');
-          if (_info === 'prev' && this._infoPage !== 'one') {
-            this._previousInfoPage();
-          }else if (_info === 'next' && this._infoPage !== 'three' ){
-            this._nextInfoPage();
-          }
-        }
-      }
-    },
-
-    _nextInfoPage: function () {
-      this.$$('#infoPages').cancelAnimation();
-      this._entryAnimation = 'slide-from-right-animation';
-      this._exitAnimation = 'slide-left-animation';
-      this.$$('#infoPages').selectNext();
-      this.$$('#infoPageIndicator').increment();
-    },
-
-    _previousInfoPage: function () {
-      this.$$('#infoPages').cancelAnimation();
-      this._entryAnimation = 'slide-from-left-animation';
-      this._exitAnimation = 'slide-right-animation';
-      this.$$('#infoPages').selectPrevious();
-      this.$$('#infoPageIndicator').decrement();
     },
 
     _goLoginPage: function (ev) {
