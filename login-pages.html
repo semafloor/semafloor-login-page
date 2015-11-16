@@ -21,7 +21,8 @@
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium iure odio nesciunt, sequi ut expedita.
         </p>
       </div>
-      <div class="social-sites-container layout horizontal around-justified wrap" on-down="_iconDown" on-up="_iconUp">
+      <div id="providerSelectionContainer" class="social-sites-container layout horizontal around-justified wrap"
+        on-down="_iconDown" on-up="_iconUp">
         <iron-image class="facebook-icon"
           data-icon="facebook"
           src="social-sites-icons/facebook.png" preload sizing="cover" fade>
@@ -68,21 +69,26 @@
               }, {
                 name: 'fade-out-animation',
                 node: this.$.placeholder,
-                // timing: {
-                //   duration: 300
-                // }
+                timing: {
+                  delay: 500,
+                  duration: 0
+                }
               }, {
                 name: 'fade-in-animation',
                 node: this.$.loginPagesContainer,
-                // timing: {
-                //   delay: 150,
-                //   duration: 1200
-                // }
+                timing: {
+                  delay: 500,
+                  duration: 100
+                }
+              }, {
+                name: 'fade-in-animation',
+                node: this.$.providerSelectionContainer,
+                timing: {
+                  delay: 550,
+                  duration: 50
+                }
               }],
-              'exit': {
-                name: 'fade-out-animation',
-                node: this
-              }
+              'exit': []
             }
           }
         },
@@ -106,12 +112,22 @@
 
         if (_imgTarget) {
           // console.log(_imgTarget);
+          this.set('animationConfig.exit', [{
+            name: 'fade-out-animation',
+            node: this
+          }, {
+            name: 'hero-animation',
+            id: 'loginToProvider',
+            fromPage: this
+          }]);
+          this.set('sharedElements.loginToProvider', ev.target.parentElement);
           _imgTarget.classList.add('pressed');
           // console.log(_imgTarget.classList);
         }
       },
 
       _iconUp: function (ev) {
+        // console.log(this.sharedElements);
         var _imgTarget = ev.target, _iconName;
 
         while (_imgTarget && _imgTarget.tagName !== 'IRON-IMAGE') {
@@ -122,30 +138,26 @@
           _iconName = _imgTarget.getAttribute('data-icon');
           // console.log(_imgTarget);
           _imgTarget.classList.remove('pressed');
+          this.set('animationConfig.entry', []);
           this.fire('show-provider-login', {provider: _iconName});
-          // switch (_iconName) {
-          //   case 'facebook':
-          //     this.fire('show-facebook-login');
-          //     break;
-          //   case 'twitter':
-          //     this.fire('show-twitter-login');
-          //     break;
-          //   case 'gplus':
-          //     this.fire('show-gplus-login');
-          //     break;
-          //   case 'github':
-          //     this.fire('show-github-login');
-          //     break;
-          //   case 'email':
-          //     this.fire('show-email-login');
-          //     break;
-          //   default:
-          // console.log(_imgTarget.classList);
-          // }
         }
+      },
 
+      // updateAnimationConfigFromProviderToLogin: function (_providerName) {
+      //   console.log(_providerName);
+      //   this.set('animationConfig.entry', [{
+      //     name: 'hero-animation',
+      //     id: 'providerToLogin',
+      //     toPage: this
+      //   }]);
+      //   this.set('sharedElements', {
+      //     'providerToLogin': this.$$('iron-image.' + _providerName + '-icon')
+      //   });
+      //   console.log(this.animationConfig);
+      //   console.log(this.sharedElements);
+      //   // this.fire('show-login-pages');
+      // },
 
-      }
     });
   </script>
 </dom-module>
