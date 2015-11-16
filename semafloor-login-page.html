@@ -56,7 +56,7 @@ Example:
               data-page="login"></login-pages>
 
             <provider-login-page id="providerLoginPage" class="provider-login-page"
-              data-page="provider"></provider-login-page>
+              data-page="provider" provider-name="[[_providerName]]"></provider-login-page>
            </neon-animated-pages>
         </div>
       </template>
@@ -88,6 +88,8 @@ Example:
         type: String,
         value: 'info'
       },
+      _providerName: String,
+
     },
 
     listeners: {
@@ -106,11 +108,12 @@ Example:
     },
 
     _showLoginPages: function (ev) {
-      this._pages = 'login';
+      this.set('_pages', 'login');
     },
 
     _showProviderLogin: function (ev) {
-      this._pages = 'provider';
+      this.set('_providerName', ev.detail.provider);
+      this.set('_pages', 'provider');
       console.log(ev.detail.provider);
     },
 
