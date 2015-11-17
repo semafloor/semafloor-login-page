@@ -117,6 +117,7 @@ Example:
     _showProviderLogin: function (ev) {
       this.set('_providerName', ev.detail.provider);
       this.set('_pages', 'provider');
+      this.$$('#providerLoginPage').measureHeaderHeight();
       console.log(ev.detail.provider);
     },
 

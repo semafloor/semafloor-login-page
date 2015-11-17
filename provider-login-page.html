@@ -1,7 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="provider-login-page-theme.html">
 
-<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../paper-scroll-header-panel/paper-scroll-header-panel.html">
 <link rel="import" href="../paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
@@ -21,8 +21,8 @@
   <template>
     <style include="provider-login-page-theme"></style>
 
-    <paper-header-panel class$="flex [[_providerCls]]" mode="waterfall">
-      <paper-toolbar id="providerToolbar" class$="tall toolbar-for-[[_providerCls]]">
+    <paper-scroll-header-panel id="providerScrollHeaderPanel" class$="flex [[_providerCls]]" mode="waterfall">
+      <paper-toolbar id="providerToolbar" class$="paper-header tall toolbar-for-[[_providerCls]]">
         <div class="icon-background">
           <div class$="icon-background-inset[[_gplusSpecial]]"></div>
         </div>
@@ -60,7 +60,8 @@
         <div class="layout horizontal center-center paper-fab-container">
           <paper-fab class$="submit-form-to-login [[_providerCls]]" icon="icons:send" mini on-tap="_submitFormToLogin" on-transitionend="_transitionendAction"></paper-fab>
         </div>
-    </paper-header-panel>
+      </div>
+    </paper-scroll-header-panel>
 
   </template>
   <script>
@@ -73,8 +74,6 @@
         providerName: {
           type: String,
         },
-        _oldProviderName: String,
-        _gplusSpecial: String,
         animationConfig: {
           value: function() {
             return {
@@ -153,6 +152,8 @@
         },
 
         _hasTransitionended: Boolean,
+        _oldProviderName: String,
+        _gplusSpecial: String,
 
       },
 
@@ -223,6 +224,9 @@
         }
       },
 
+      measureHeaderHeight: function () {
+        this.$.providerScrollHeaderPanel.measureHeaderHeight();
+      },
 
     });
   </script>
