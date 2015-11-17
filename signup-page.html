@@ -7,6 +7,8 @@
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../paper-fab/paper-fab.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-dialog-scrollable/paper-dialog-scrollable.html">
 
 <link rel="import" href="../iron-image/iron-image.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
@@ -58,12 +60,25 @@
             type="password"
             auto-validate
             required error-message="Password required!"></paper-input>
-          <!-- <paper-checkbox id="signupCheckbox" class="signup-checkbox" name="remember">Login Automatically</paper-checkbox> -->
+          <paper-checkbox id="signupCheckbox" class="signup-checkbox" name="readnagree" checked="{{_readnAgree}}">I've and agree the </paper-checkbox>
+          <span class="signup-tnc" on-tap="_openTnc">terms and conditions</span>.
         </form>
         <div class="layout horizontal center-center paper-fab-container">
-          <paper-fab class="submit-form-to-signup" icon="icons:send" mini on-tap="_submitFormToSignup" on-transitionend="_transitionendAction"></paper-fab>
+          <paper-fab class="submit-form-to-signup" icon="icons:send" mini
+            disabled="[[!_readnAgree]]" on-tap="_submitFormToSignup" on-transitionend="_transitionendAction"></paper-fab>
         </div>
       </div>
+
+      <paper-dialog id="tncDialog" class="tnc-dialog" modal role="tncdialog">
+        <h2>Terms and Conditions</h2>
+        <paper-dialog-scrollable class="tnc-dialog-content">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur incidunt, quae molestiae nostrum debitis asperiores explicabo totam odio assumenda non enim ut delectus, placeat accusantium architecto obcaecati facere praesentium necessitatibus, nobis officia omnis facilis. Assumenda qui doloribus non distinctio dolorum ab autem, sapiente consequatur vero corrupti at optio animi natus laudantium ex facilis harum quidem repellendus eius voluptatum. Facilis, quo. Excepturi soluta veniam sequi aliquid mollitia quibusdam nisi incidunt quis sed eligendi eaque minima, ea quod non voluptates tenetur libero earum eos deleniti perferendis ad, nesciunt aspernatur est quos laborum. Ipsum reiciendis suscipit deserunt optio voluptates voluptatibus hic laudantium perferendis nesciunt illum at sit enim, aliquid sunt! Architecto laboriosam porro odit deleniti, quia officiis distinctio, necessitatibus ex eius magnam autem illum asperiores aspernatur. Quam debitis, suscipit error alias! Laboriosam fugiat unde saepe vitae assumenda aliquam reprehenderit impedit nostrum et nobis natus incidunt, esse excepturi odit. Nobis consectetur quis dolore aut a maiores incidunt magnam, officiis nemo ad facere animi consequuntur excepturi, soluta vel voluptates, impedit mollitia libero deserunt odit tempore ducimus ratione hic. Tempore, mollitia optio! Temporibus quia beatae quibusdam dolores ex quisquam ipsa veniam facere sed, ea laudantium alias tempore, excepturi, rem quos quo consectetur, quae. Debitis veritatis ratione modi quaerat repudiandae, placeat quidem at, libero nesciunt deleniti sint maxime quibusdam saepe doloremque maiores. Aliquid nostrum adipisci doloribus impedit soluta in assumenda, aperiam eius accusantium laboriosam vitae voluptatem fugiat exercitationem, praesentium corporis consequatur itaque autem? Itaque mollitia asperiores laboriosam vel veniam praesentium quis molestias cumque nesciunt quasi. Consectetur facere nobis impedit earum cumque sequi commodi, quod dolorem quo in temporibus odit vel ex nihil nulla nam! Officiis excepturi facere provident quos dolores quibusdam sed porro, asperiores at, alias est pariatur illum reiciendis, incidunt dignissimos tenetur a! Minus excepturi nulla aspernatur dignissimos quam, veritatis, delectus ut totam quidem. Quos, magnam dolor temporibus velit maiores asperiores eum facere beatae veniam voluptas in aut nesciunt nobis iusto impedit minima, repellat possimus consequatur doloremque odio cupiditate non perferendis! Sunt commodi unde amet maxime. Nihil ea nobis commodi cupiditate non magni facilis, provident. Natus tempore deserunt placeat eveniet culpa consequatur quam quis facilis excepturi animi officia, perferendis quae, incidunt corporis libero aut cupiditate dolores aliquid sint debitis suscipit error. Eius commodi aperiam veniam ad odit quis id sapiente adipisci officia esse ipsum error, itaque! Ullam voluptatem tempora sed impedit repellendus similique odit placeat repellat officia quae vel tempore odio, doloribus molestiae error dolore labore commodi quibusdam consequatur. Molestias sunt quia quod ratione in voluptate, earum iure hic. Aliquam reiciendis, voluptatem. Quo asperiores illo rem voluptatem aliquam. Quaerat cum quos inventore impedit iure veritatis soluta obcaecati ratione! Natus omnis laboriosam, ab, quibusdam necessitatibus cum nam inventore blanditiis nemo ratione eligendi soluta rem eos porro possimus maxime officia odio repellat, minus unde expedita aperiam laborum magni! Quia iusto sapiente culpa sunt. Nostrum recusandae, blanditiis voluptas tenetur totam illum iste, nesciunt reprehenderit voluptate, quibusdam dolore. Id ex ipsum culpa rerum excepturi molestiae aut, nisi doloribus, labore quas at odit, magni corporis iure consequatur. Sint perferendis, atque dolores.
+        </paper-dialog-scrollable>
+        <div class="buttons" on-tap="_tncDialogAction">
+          <paper-button dialog-dismiss>disagree</paper-button>
+          <paper-button dialog-confirm>agree</paper-button>
+        </div>
+      </paper-dialog>
     </paper-scroll-header-panel>
 
   </template>
@@ -109,6 +124,7 @@
         },
 
         _hasTransitionended: Boolean,
+        _readnAgree: Boolean,
 
       },
 
@@ -117,11 +133,12 @@
       },
 
       _goBackLoginPages: function (ev) {
-        this.fire('show-login-pages', {fromPage: this.providerName});
+        this.fire('show-login-pages');
       },
 
       _submitFormToSignup: function (ev) {
         this.set('_hasTransitionended', false);
+        this.set('_readnAgree', false);
       },
 
       _onIronFormPresubmit: function (ev) {
@@ -136,15 +153,41 @@
         if (_target && _target.tagName === 'PAPER-FAB') {
           if (!this._hasTransitionended) {
             this.set('_hasTransitionended', true);
-            this.$.providerForm.submit();
+            this.$.signupForm.submit();
             console.log(ev);
-            console.log(this.$.providerForm.request.body);
+            console.log(this.$.signupForm.request.body);
           }
         }
       },
 
       measureHeaderHeight: function () {
         this.$.signupScrollHeaderPanel.measureHeaderHeight();
+      },
+
+      _openTnc: function (ev) {
+        // console.log(ev);
+        var _target = ev.target;
+
+        if (_target && _target.tagName === 'SPAN') {
+          var _dialog = this.$.tncDialog;
+
+          if (_dialog) {
+            _dialog.open();
+          }
+        }
+      },
+
+      _tncDialogAction: function (ev) {
+        // console.log(ev);
+        var _target = ev.target;
+
+        if (_target && _target.tagName === 'PAPER-BUTTON') {
+          if (_target.hasAttribute('dialog-confirm')) {
+            this.set('_readnAgree', true);
+          }else {
+            this.set('_readnAgree', false);
+          }
+        }
       },
 
     });
