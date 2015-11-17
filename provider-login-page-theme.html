@@ -48,19 +48,24 @@
         text-transform: capitalize;
       }
 
-      paper-toolbar.toolbar-for-facebook {
+      paper-toolbar.toolbar-for-facebook,
+      paper-fab.submit-form-to-login.facebook {
         background: #1A237E;
       }
-      paper-toolbar.toolbar-for-twitter {
+      paper-toolbar.toolbar-for-twitter,
+      paper-fab.submit-form-to-login.twitter {
         background: #29B6F6;
       }
-      paper-toolbar.toolbar-for-gplus {
+      paper-toolbar.toolbar-for-gplus,
+      paper-fab.submit-form-to-login.gplus {
         background: #DC4639;
       }
-      paper-toolbar.toolbar-for-github {
+      paper-toolbar.toolbar-for-github,
+      paper-fab.submit-form-to-login.github {
         background: #000000;
       }
-      paper-toolbar.toolbar-for-email {
+      paper-toolbar.toolbar-for-email,
+      paper-fab.submit-form-to-login.email {
         background: #009688;
       }
 
@@ -86,11 +91,10 @@
         padding: 24px 0;
       }
 
-      paper-fab.submit-form-to-login {
-        background: #009688;
+      /* remove weird highlighting when tap in mobile */
+      paper-checkbox {
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
       }
-
-
 
     </style>
 

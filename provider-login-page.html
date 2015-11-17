@@ -23,53 +23,17 @@
 
     <paper-header-panel class$="flex [[_providerCls]]" mode="waterfall">
       <paper-toolbar id="providerToolbar" class$="tall toolbar-for-[[_providerCls]]">
-        <template is="dom-if" if="[[_isFacebook]]" restamp="true">
-          <div class="icon-background">
-            <div class="icon-background-inset"></div>
-          </div>
-          <iron-image id="facebokToolbar" class$="[[_providerCls]]-icon"
-            data-icon="[[_providerCls]]"
-            src="social-sites-icons/facebook.png" preload sizing="cover" fade>
-          </iron-image>
-        </template>
-        <template is="dom-if" if="[[_isTwitter]]" restamp="true">
-          <div class="icon-background">
-            <div class="icon-background-inset"></div>
-          </div>
-          <iron-image id="twitterToolbar" class$="[[_providerCls]]-icon"
-            data-icon="[[_providerCls]]"
-            src="social-sites-icons/twitter.png" preload sizing="cover" fade>
-          </iron-image>
-        </template>
-        <template is="dom-if" if="[[_isGplus]]" restamp="true">
-          <div class="icon-background">
-            <div class="icon-background-inset gplus-special"></div>
-          </div>
-          <iron-image id="gplusToolbar" class$="[[_providerCls]]-icon"
-            data-icon="[[_providerCls]]"
-            src="social-sites-icons/gplus.png" preload sizing="cover" fade>
-          </iron-image>
-        </template>
-        <template is="dom-if" if="[[_isGithub]]" restamp="true">
-          <div class="icon-background">
-            <div class="icon-background-inset"></div>
-          </div>
-          <iron-image id="githubToolbar" class$="[[_providerCls]]-icon"
-            data-icon="[[_providerCls]]"
-            src="social-sites-icons/github.png" preload sizing="cover" fade>
-          </iron-image>
-        </template>
-        <template is="dom-if" if="[[_isEmail]]" restamp="true">
-          <div class="icon-background">
-            <div class="icon-background-inset"></div>
-          </div>
-          <iron-image id="emailToolbar" class$="[[_providerCls]]-icon"
-            data-icon="[[_providerCls]]"
-            src="social-sites-icons/email.png" preload sizing="cover" fade>
-          </iron-image>
-        </template>
+        <div class="icon-background">
+          <div class$="icon-background-inset[[_gplusSpecial]]"></div>
+        </div>
+        <iron-image id="facebokToolbar" class$="[[_providerCls]]-icon"
+          data-icon="[[_providerCls]]"
+          src$="../social-sites-icons/[[_providerCls]].png" sizing="cover" fade>
+        </iron-image>
+
         <div class="flex-auto"></div>
         <paper-icon-button icon="icons:close" on-tap="_goBackLoginPages"></paper-icon-button>
+
         <div class="provider-name bottom">
           <span>[[providerName]]</span>
         </div>
@@ -85,14 +49,16 @@
             type="text"
             auto-validate
             required
+            error-message="Invalid Email Address!"
             pattern="\w\S+@\w\S+\.\S+"></paper-input>
           <paper-input name="password" label="Password"
             type="password"
-            required></paper-input>
+            auto-validate
+            required error-message="Password required!"></paper-input>
           <paper-checkbox name="remember">Login Automatically</paper-checkbox>
         </form>
         <div class="layout horizontal center-center paper-fab-container">
-          <paper-fab class="submit-form-to-login" icon="icons:send" mini on-tap="_submitFormToLogin"></paper-fab>
+          <paper-fab class$="submit-form-to-login [[_providerCls]]" icon="icons:send" mini on-tap="_submitFormToLogin" on-transitionend="_transitionendAction"></paper-fab>
         </div>
     </paper-header-panel>
 
@@ -108,6 +74,7 @@
           type: String,
         },
         _oldProviderName: String,
+        _gplusSpecial: String,
         animationConfig: {
           value: function() {
             return {
@@ -185,6 +152,8 @@
           value: false
         },
 
+        _hasTransitionended: Boolean,
+
       },
 
       listeners: {
@@ -195,6 +164,7 @@
         // always reset the providerName value.
         this._resetProvider();
         console.log('you must run this everytime!!!', _providerName);
+        this.set('_gplusSpecial', '');
         switch (_providerName) {
           case 'facebook':
             this.set('_isFacebook', true);
@@ -203,6 +173,7 @@
             this.set('_isTwitter', true);
             break;
           case 'gplus':
+            this.set('_gplusSpecial', ' gplus-special')
             this.set('_isGplus', true);
             break;
           case 'github':
@@ -230,14 +201,27 @@
       },
 
       _submitFormToLogin: function (ev) {
-        this.$.providerForm.submit();
-        console.log(this.$.providerForm.request.body);
+        this.set('_hasTransitionended', false);
       },
 
       _onIronFormPresubmit: function (ev) {
         console.log(ev.target.request.body);
         ev.preventDefault();
-      }
+      },
+
+      _transitionendAction: function (ev) {
+        // to counter transitionend inside transitionend.
+        var _target = ev.target;
+
+        if (_target && _target.tagName === 'PAPER-FAB') {
+          if (!this._hasTransitionended) {
+            this.set('_hasTransitionended', true);
+            this.$.providerForm.submit();
+            console.log(ev);
+            console.log(this.$.providerForm.request.body);
+          }
+        }
+      },
 
 
     });
