@@ -108,16 +108,10 @@ Example:
     },
 
     _showLoginPages: function (ev) {
-      // if (ev.detail.fromPage) {
-      //   // update animationConfig for transition providerToLogin.
-      //   this.$$('#loginPages').updateAnimationConfigFromProviderToLogin(ev.detail.fromPage);
-      //   this.set('_pages', 'login');
-      // }else {
-        // console.log(this.$$('#loginPages').animationConfig);
-        // console.log(this.$$('#loginPages').sharedElements);
-
-        this.set('_pages', 'login');
-      // }
+      if (ev.detail.fromPage) {
+        this.$$('#loginPages').updateAnimationConfigFromProviderToLogin(ev.detail.fromPage);
+      }
+      this.set('_pages', 'login');
     },
 
     _showProviderLogin: function (ev) {

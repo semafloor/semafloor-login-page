@@ -10,6 +10,7 @@
 
 <link rel="import" href="../iron-image/iron-image.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-form/iron-form.html">
 
 <link rel="import" href="../neon-animation/neon-animations.html">
 
@@ -78,7 +79,8 @@
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci minima natus architecto molestiae, corrupti debitis vitae eveniet dicta. Eligendi, accusamus.
         </p>
-        <form id="providerForm" class="provider-login-form" action="index.html" method="post">
+        <form id="providerForm" is="iron-form" class="provider-login-form"
+          action="index.html" method="post">
           <paper-input name="email" label="Email Address"
             type="text"
             auto-validate
@@ -90,7 +92,7 @@
           <paper-checkbox name="remember">Login Automatically</paper-checkbox>
         </form>
         <div class="layout horizontal center-center paper-fab-container">
-          <paper-fab icon="icons:send" mini on-tap="_goBackLoginPages"></paper-fab>
+          <paper-fab class="submit-form-to-login" icon="icons:send" mini on-tap="_submitFormToLogin"></paper-fab>
         </div>
     </paper-header-panel>
 
@@ -127,14 +129,33 @@
                   // duration: 1000
                 }
               }],
-              'exit': []
+              'exit': [{
+                name: 'hero-animation',
+                id: 'providerToLogin',
+                fromPage: this
+              }, {
+                name: 'fade-out-animation',
+                node: this.$.providerToolbar,
+                timing: {
+                  delay: 0,
+                  duration: 0
+                }
+              }, {
+                name: 'fade-out-animation',
+                node: this,
+                timing: {
+                  delay: 0,
+                  duration: 0
+                }
+              }]
             }
           }
         },
         sharedElements: {
           value: function () {
             return {
-              'loginToProvider': this.$.providerToolbar
+              'loginToProvider': this.$.providerToolbar,
+              'providerToLogin': this.$.providerToolbar
             }
           }
         },
@@ -166,10 +187,13 @@
 
       },
 
+      listeners: {
+        'iron-form-presubmit': '_onIronFormPresubmit'
+      },
+
       _computedProviderCls: function(_providerName) {
         // always reset the providerName value.
         this._resetProvider();
-
         console.log('you must run this everytime!!!', _providerName);
         switch (_providerName) {
           case 'facebook':
@@ -192,37 +216,29 @@
         }
         return _providerName;
       },
-      _resetProvider: function () {
 
+      _goBackLoginPages: function (ev) {
+        this.fire('show-login-pages', {fromPage: this.providerName});
+      },
+
+      _resetProvider: function () {
         this.set('_isFacebook', false);
         this.set('_isTwitter', false);
         this.set('_isGplus', false);
         this.set('_isGithub', false);
         this.set('_isEmail', false);
-        // switch (_providerName) {
-        //   case 'facebook':
-        //     this.set('_isFacebook', false);
-        //     break;
-        //   case 'twitter':
-        //     this.set('_isTwitter', false);
-        //     break;
-        //   case 'gplus':
-        //     this.set('_isGplus', false);
-        //     break;
-        //   case 'github':
-        //     this.set('_isGithub', false);
-        //     break;
-        //   case 'email':
-        //     this.set('_isEmail', false);
-        //     break;
-        //   default:
-        // }
       },
 
-      _goBackLoginPages: function (ev) {
-        // switch back to providers selection page.
-        this.fire('show-login-pages', {fromPage: this.providerName});
+      _submitFormToLogin: function (ev) {
+        this.$.providerForm.submit();
+        console.log(this.$.providerForm.request.body);
       },
+
+      _onIronFormPresubmit: function (ev) {
+        console.log(ev.target.request.body);
+        ev.preventDefault();
+      }
+
 
     });
   </script>

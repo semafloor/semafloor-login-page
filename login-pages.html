@@ -96,7 +96,8 @@
         sharedElements: {
           value: function () {
             return {
-              'infoToLogin': this.$.placeholder
+              'infoToLogin': this.$.placeholder,
+              'providerToLogin': this
             }
           }
         }
@@ -111,7 +112,6 @@
         }
 
         if (_imgTarget) {
-          // console.log(_imgTarget);
           this.set('animationConfig.exit', [{
             name: 'fade-out-animation',
             node: this
@@ -122,7 +122,6 @@
           }]);
           this.set('sharedElements.loginToProvider', ev.target.parentElement);
           _imgTarget.classList.add('pressed');
-          // console.log(_imgTarget.classList);
         }
       },
 
@@ -143,20 +142,16 @@
         }
       },
 
-      // updateAnimationConfigFromProviderToLogin: function (_providerName) {
-      //   console.log(_providerName);
-      //   this.set('animationConfig.entry', [{
-      //     name: 'hero-animation',
-      //     id: 'providerToLogin',
-      //     toPage: this
-      //   }]);
-      //   this.set('sharedElements', {
-      //     'providerToLogin': this.$$('iron-image.' + _providerName + '-icon')
-      //   });
-      //   console.log(this.animationConfig);
-      //   console.log(this.sharedElements);
-      //   // this.fire('show-login-pages');
-      // },
+      updateAnimationConfigFromProviderToLogin: function (_providerName) {
+        this.animationConfig.entry.push({
+          name: 'hero-animation',
+          id: 'providerToLogin',
+          toPage: this
+        }, {
+          name: 'fade-in-animation',
+          node: this
+        });
+      },
 
     });
   </script>
