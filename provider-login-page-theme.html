@@ -10,6 +10,7 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
 
         display: block;
         @apply(--layout-vertical);
@@ -83,18 +84,56 @@
         padding: 24px 0;
       }
 
-      .provider-login-form
+      form.provider-login-form
       paper-checkbox {
         margin-top: 24px;
       }
 
-      .paper-fab-container {
-        padding: 24px 0;
+      paper-input.facebook {
+        --paper-input-container-focus-color: #1A237E;
+        --paper-input-container-input-color: #1A237E;
+      }
+      paper-checkbox.facebook {
+        --paper-checkbox-checked-color: #1A237E;
+        --paper-checkbox-checked-ink-color: #1A237E;
       }
 
-      /* remove weird highlighting when tap in mobile */
-      paper-checkbox {
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
+      paper-input.twitter {
+        --paper-input-container-focus-color: #29B6F6;
+        --paper-input-container-input-color: #29B6F6;
+      }
+      paper-checkbox.twitter {
+        --paper-checkbox-checked-color: #29B6F6;
+        --paper-checkbox-checked-ink-color: #29B6F6;
+      }
+      paper-input.gplus {
+        --paper-input-container-focus-color: #DC4639;
+        --paper-input-container-input-color: #DC4639;
+        --paper-input-container-invalid-color: #ffa000;
+      }
+      paper-checkbox.gplus {
+        --paper-checkbox-checked-color: #DC4639;
+        --paper-checkbox-checked-ink-color: #DC4639;
+      }
+      paper-input.github {
+        --paper-input-container-focus-color: #000000;
+        --paper-input-container-input-color: #000000;
+      }
+      paper-checkbox.github {
+        --paper-checkbox-checked-color: #000000;
+        --paper-checkbox-checked-ink-color: #000000;
+      }
+      paper-input.email {
+        --paper-input-container-focus-color: #009688;
+        --paper-input-container-input-color: #009688;
+      }
+      paper-checkbox.email {
+        --paper-checkbox-checked-color: #009688;
+        --paper-checkbox-checked-ink-color: #009688;
+      }
+
+      .paper-fab-container {
+        padding: 24px 0;
       }
 
     </style>

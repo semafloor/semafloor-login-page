@@ -1,0 +1,86 @@
+<dom-module id="signup-page-theme">
+  <template>
+    <style>
+      :host {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+
+        display: block;
+        background: white;
+        @apply(--layout-vertical);
+      }
+
+      *, *::before, *::after {
+        box-sizing: inherit;
+      }
+
+      iron-image {
+        position: absolute;
+        top: 3px;
+        width: 112px;
+        height: 112px;
+        border-radius: 50%;
+      }
+
+      /*.icon-background {
+        position: absolute;
+        width: 112px;
+        height: 112px;
+      }
+      .icon-background .icon-background-inset {
+        position: relative;
+        background: #ffffff;
+        margin: 8px;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%
+      }*/
+
+      .signup-name {
+        padding-left: 24px;
+        text-transform: capitalize;
+      }
+
+      paper-toolbar,
+      paper-fab.submit-form-to-signup {
+        background: #009688;
+      }
+
+      paper-icon-button {
+        margin-top: 16px;
+        margin-right: 16px;
+      }
+
+      .signup-content {
+        padding: 24px 40px;
+      }
+
+      .signup-form {
+        padding: 24px 0;
+      }
+
+      /*form.signup-form
+      paper-checkbox {
+        margin-top: 24px;
+      }*/
+
+      /*paper-checkbox.signup {
+        --paper-checkbox-checked-color: #009688;
+        --paper-checkbox-checked-ink-color: #009688;
+      }*/
+
+      .paper-fab-container {
+        padding: 24px 0;
+      }
+
+    </style>
+
+  </template>
+</dom-module>

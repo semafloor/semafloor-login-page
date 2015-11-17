@@ -9,7 +9,7 @@
 <link rel="import" href="../neon-animation/animations/hero-animation.html">
 
 <dom-module id="login-pages">
-  <template>
+  <template strip-whitespace>
     <style include="login-pages-theme"></style>
 
     <div id="placeholder" class="fit"></div>
@@ -48,6 +48,10 @@
           src="social-sites-icons/email.png" preload sizing="cover" fade>
           <paper-ripple></paper-ripple>
         </iron-image>
+      </div>
+      <div class="create-new-account">
+        <span>Don't have an account? </span>
+        <paper-button class="sign-up-button" on-tap="_createNewAccount">Sign up</paper-button>
       </div>
     </div>
 
@@ -152,6 +156,16 @@
           node: this
         });
       },
+
+      _createNewAccount: function (ev) {
+        var _target = ev.target;
+
+        while (_target && _target.tagName !== 'PAPER-BUTTON') {
+          _target = _target.parentElement;
+        }
+
+        this.fire('show-signup-page');
+      }
 
     });
   </script>

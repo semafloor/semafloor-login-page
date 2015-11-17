@@ -8,20 +8,22 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../paper-dialog/paper-dialog.html">
-<link rel="import" href="../paper-slider/paper-slider.html">
-<link rel="import" href="../paper-button/paper-button.html">
 
 <link rel="import" href="semafloor-login-page-theme.html">
 <link rel="import" href="info-pages.html">
 <link rel="import" href="info-pages-behavior.html">
 <link rel="import" href="login-pages.html">
 <link rel="import" href="provider-login-page.html">
+<link rel="import" href="signup-page.html">
 
-<link rel="import" href="../neon-animation/neon-animations.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-slider/paper-slider.html">
+<link rel="import" href="../paper-button/paper-button.html">
 
 <link rel="import" href="../neon-animation/neon-animated-pages.html">
 
+
+<link rel="import" href="../neon-animation/neon-animations.html">
 <!--
 An element providing a solution to no problem in particular.
 
@@ -57,6 +59,10 @@ Example:
 
             <provider-login-page id="providerLoginPage" class="provider-login-page"
               data-page="provider" provider-name="[[_providerName]]"></provider-login-page>
+
+            <signup-page id="signupPage" class="signup-page"
+              data-page="signup"></signup-page>
+
            </neon-animated-pages>
         </div>
       </template>
@@ -96,7 +102,8 @@ Example:
       'next-info-page': '_onNextInfoPage',
       'prev-info-page': '_onPrevInfoPage',
       'show-login-pages': '_showLoginPages',
-      'show-provider-login': '_showProviderLogin'
+      'show-provider-login': '_showProviderLogin',
+      'show-signup-page': '_showSignupPage'
     },
 
     _onNextInfoPage: function(ev) {
@@ -119,6 +126,12 @@ Example:
       this.set('_pages', 'provider');
       this.$$('#providerLoginPage').measureHeaderHeight();
       console.log(ev.detail.provider);
+    },
+
+    _showSignupPage: function (ev) {
+      console.log('show-signup');
+      this.set('_pages', 'signup');
+      this.$$('#signupPage').measureHeaderHeight();
     },
 
     // Element Lifecycle

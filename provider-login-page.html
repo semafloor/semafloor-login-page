@@ -18,7 +18,7 @@
 <link rel="import" href="../neon-animation/animations/hero-animation.html">
 
 <dom-module id="provider-login-page">
-  <template>
+  <template strip-whitespace>
     <style include="provider-login-page-theme"></style>
 
     <paper-scroll-header-panel id="providerScrollHeaderPanel" class$="flex [[_providerCls]]" mode="waterfall">
@@ -26,7 +26,7 @@
         <div class="icon-background">
           <div class$="icon-background-inset[[_gplusSpecial]]"></div>
         </div>
-        <iron-image id="facebokToolbar" class$="[[_providerCls]]-icon"
+        <iron-image id="providerImage" class$="[[_providerCls]]-icon"
           data-icon="[[_providerCls]]"
           src$="../social-sites-icons/[[_providerCls]].png" sizing="cover" fade>
         </iron-image>
@@ -45,17 +45,17 @@
         </p>
         <form id="providerForm" is="iron-form" class="provider-login-form"
           action="index.html" method="post">
-          <paper-input name="email" label="Email Address"
+          <paper-input class$="[[_providerCls]]" name="email" label="Email Address"
             type="text"
             auto-validate
             required
             error-message="Invalid Email Address!"
             pattern="\w\S+@\w\S+\.\S+"></paper-input>
-          <paper-input name="password" label="Password"
+          <paper-input class$="[[_providerCls]]" name="password" label="Password"
             type="password"
             auto-validate
             required error-message="Password required!"></paper-input>
-          <paper-checkbox name="remember">Login Automatically</paper-checkbox>
+          <paper-checkbox id="providerCheckbox" class$="provider-checkbox [[_providerCls]]" name="remember">Login Automatically</paper-checkbox>
         </form>
         <div class="layout horizontal center-center paper-fab-container">
           <paper-fab class$="submit-form-to-login [[_providerCls]]" icon="icons:send" mini on-tap="_submitFormToLogin" on-transitionend="_transitionendAction"></paper-fab>
@@ -130,26 +130,6 @@
           type: String,
           computed: '_computedProviderCls(providerName)'
         },
-        _isFacebook: {
-          type: Boolean,
-          value: false
-        },
-        _isTwitter: {
-          type: Boolean,
-          value: false
-        },
-        _isGplus: {
-          type: Boolean,
-          value: false
-        },
-        _isGithub: {
-          type: Boolean,
-          value: false
-        },
-        _isEmail: {
-          type: Boolean,
-          value: false
-        },
 
         _hasTransitionended: Boolean,
         _oldProviderName: String,
@@ -161,32 +141,22 @@
         'iron-form-presubmit': '_onIronFormPresubmit'
       },
 
+      observers: ['_updateProviderStyle(_providerCls)'],
+
       _computedProviderCls: function(_providerName) {
         // always reset the providerName value.
         this._resetProvider();
         console.log('you must run this everytime!!!', _providerName);
-        this.set('_gplusSpecial', '');
-        switch (_providerName) {
-          case 'facebook':
-            this.set('_isFacebook', true);
-            break;
-          case 'twitter':
-            this.set('_isTwitter', true);
-            break;
-          case 'gplus':
-            this.set('_gplusSpecial', ' gplus-special')
-            this.set('_isGplus', true);
-            break;
-          case 'github':
-            this.set('_isGithub', true);
-            break;
-          case 'email':
-            this.set('_isEmail', true);
-            break;
-          default:
-
+        if (_providerName === 'gplus') {
+          this.set('_gplusSpecial', ' gplus-special');
+        }else {
+          this.set('_gplusSpecial', '');
         }
         return _providerName;
+      },
+
+      _updateProviderStyle: function (_providerClass) {
+        this.updateStyles();
       },
 
       _goBackLoginPages: function (ev) {

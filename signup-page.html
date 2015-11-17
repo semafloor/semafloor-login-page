@@ -1,0 +1,153 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="signup-page-theme.html">
+
+<link rel="import" href="../paper-scroll-header-panel/paper-scroll-header-panel.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-form/iron-form.html">
+
+<link rel="import" href="../neon-animation/neon-animations.html">
+
+<link rel="import" href="../neon-animation/neon-animatable-behavior.html">
+<link rel="import" href="slide-from-bottom-animation.html">
+<link rel="import" href="slide-from-top-animation.html">
+
+<dom-module id="signup-page">
+  <template strip-whitespace>
+    <style include="signup-page-theme"></style>
+
+    <paper-scroll-header-panel id="signupScrollHeaderPanel" class="flex signup-scroll-header-panel" mode="waterfall">
+      <paper-toolbar id="signupToolbar" class="paper-header tall">
+        <!-- <div class="icon-background">
+          <div class="icon-background-inset"></div>
+        </div> -->
+        <iron-image id="signupImage" class="signup-image"
+          data-icon="signup-image"
+          src="product_image_192.png" sizing="cover" preload fade>
+        </iron-image>
+
+        <div class="flex-auto"></div>
+        <paper-icon-button icon="icons:close" on-tap="_goBackLoginPages"></paper-icon-button>
+
+        <div class="signup-name bottom">
+          <span>Signup</span>
+        </div>
+      </paper-toolbar>
+
+      <div id="signupContent" class="content signup-content">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci minima natus architecto molestiae, corrupti debitis vitae eveniet dicta. Eligendi, accusamus.
+        </p>
+        <form id="signupForm" is="iron-form" class="signup-form"
+          action="index.html" method="post">
+          <paper-input class="signup-input" name="email" label="Email Address"
+            type="text"
+            auto-validate
+            required
+            error-message="Invalid Email Address!"
+            pattern="\w\S+@\w\S+\.\S+"></paper-input>
+          <paper-input class="signup-input" name="password" label="Password"
+            type="password"
+            auto-validate
+            required error-message="Password required!"></paper-input>
+          <!-- <paper-checkbox id="signupCheckbox" class="signup-checkbox" name="remember">Login Automatically</paper-checkbox> -->
+        </form>
+        <div class="layout horizontal center-center paper-fab-container">
+          <paper-fab class="submit-form-to-signup" icon="icons:send" mini on-tap="_submitFormToSignup" on-transitionend="_transitionendAction"></paper-fab>
+        </div>
+      </div>
+    </paper-scroll-header-panel>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'signup-page',
+
+      behaviors: [Polymer.NeonAnimatableBehavior],
+
+      properties: {
+        providerName: {
+          type: String,
+        },
+        animationConfig: {
+          value: function() {
+            return {
+              'entry': [{
+                name: 'slide-from-bottom-animation',
+                node: this,
+                timing: {
+                  delay: 150
+                }
+              }, {
+                name: 'fade-in-animation',
+                node: this,
+                timing: {
+                  delay: 0,
+                  duration: 0
+                }
+              }],
+              'exit': [{
+                name: 'slide-from-top-animation',
+                node: this,
+                timing: {
+                  delay: 150
+                }
+              }, {
+                name: 'fade-out-animation',
+                node: this,
+                timing: {
+                  delay: 150
+                }
+              }]
+            }
+          }
+        },
+
+        _hasTransitionended: Boolean,
+
+      },
+
+      listeners: {
+        'iron-form-presubmit': '_onIronFormPresubmit'
+      },
+
+      _goBackLoginPages: function (ev) {
+        this.fire('show-login-pages', {fromPage: this.providerName});
+      },
+
+      _submitFormToSignup: function (ev) {
+        this.set('_hasTransitionended', false);
+      },
+
+      _onIronFormPresubmit: function (ev) {
+        console.log(ev.target.request.body);
+        ev.preventDefault();
+      },
+
+      _transitionendAction: function (ev) {
+        // to counter transitionend inside transitionend.
+        var _target = ev.target;
+
+        if (_target && _target.tagName === 'PAPER-FAB') {
+          if (!this._hasTransitionended) {
+            this.set('_hasTransitionended', true);
+            this.$.providerForm.submit();
+            console.log(ev);
+            console.log(this.$.providerForm.request.body);
+          }
+        }
+      },
+
+      measureHeaderHeight: function () {
+        this.$.signupScrollHeaderPanel.measureHeaderHeight();
+      },
+
+    });
+  </script>
+</dom-module>
