@@ -1,7 +1,10 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="login-pages-theme.html">
 <link rel="import" href="../iron-image/iron-image.html">
+
 <link rel="import" href="../paper-ripple/paper-ripple.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
 
 <link rel="import" href="../neon-animation/neon-animations.html">
 
@@ -54,6 +57,8 @@
         <paper-button class="sign-up-button" on-tap="_createNewAccount">Sign up</paper-button>
       </div>
     </div>
+
+    <paper-toast id="signupToast" text=""></paper-toast>
 
   </template>
   <script>
@@ -147,14 +152,19 @@
       },
 
       updateAnimationConfigFromProviderToLogin: function (_providerName) {
-        this.animationConfig.entry.push({
-          name: 'hero-animation',
-          id: 'providerToLogin',
-          toPage: this
-        }, {
-          name: 'fade-in-animation',
-          node: this
-        });
+        if (_providerName) {
+          this.animationConfig.entry.push({
+            name: 'hero-animation',
+            id: 'providerToLogin',
+            toPage: this
+          }, {
+            name: 'fade-in-animation',
+            node: this
+          });
+        }else {
+          console.log('null-entry');
+          this.set('animationConfig.entry', []);
+        }
       },
 
       _createNewAccount: function (ev) {
@@ -165,7 +175,15 @@
         }
 
         this.fire('show-signup-page');
-      }
+      },
+
+      updateToastText: function (_text) {
+        this.$.signupToast.text = _text;
+        this.async(function () {
+          console.log('haha');
+          this.$.signupToast.show();
+        }, 500);
+      },
 
     });
   </script>

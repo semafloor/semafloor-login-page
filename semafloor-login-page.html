@@ -117,8 +117,15 @@ Example:
     _showLoginPages: function (ev) {
       if (ev.detail.fromPage) {
         this.$$('#loginPages').updateAnimationConfigFromProviderToLogin(ev.detail.fromPage);
+        this.set('_pages', 'login');
+      }else if (ev.detail.errorSuccess) {
+        console.log('error or success');
+        this.$$('#loginPages').updateAnimationConfigFromProviderToLogin();
+        this.set('_pages', 'login');
+        this.$$('#loginPages').updateToastText(ev.detail.errorSuccess);
+      }else {
+        this.set('_pages', 'login');
       }
-      this.set('_pages', 'login');
     },
 
     _showProviderLogin: function (ev) {

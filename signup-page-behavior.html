@@ -1,0 +1,77 @@
+<link rel="import" href="../firebase-element/firebase.html">
+
+<script>
+  var Semafloor = Semafloor || {};
+  var _semafloorRef = new Firebase('https://semafloor-webapp.firebaseio.com/users/password');
+
+  Semafloor.signupPageBehavior = {
+    properties: {
+      _readyToOffAuth: {
+        type: Boolean
+      }
+    },
+
+    listeners: {
+      'event': 'eventHandlerFn'
+    },
+
+    _semafloorCreateUser: function(_email, _password, _fname, _lname) {
+      var _self = this;
+      _semafloorRef.createUser({
+        email: _email,
+        password: _password
+      }, function (error, userData) {
+        if (error) {
+          _self.fire('show-login-pages', {errorSuccess: error.code + ': ' + error.message});
+        }else {
+          // read profile
+          _semafloorRef.authWithPassword({
+            email: _email,
+            password: _password
+          }, function(error){if (error){console.log(error);}});
+
+          var _readyToOffAuth = this._readyToOffAuth;
+          function _saveUserDataCallback(authData) {
+            // compare read and create.
+            // console.log('ref-on-auth', _self._readyToOffAuth);
+            if (authData && authData.uid === userData.uid) {
+              // console.log(authData.uid === userData.uid);
+              window.navigator.geolocation.getCurrentPosition(function (location) {
+                var _lat = 0, _long = 0;
+                if (location) {
+                  _lat = location.coords.latitude.toFixed(3);
+                  _long = location.coords.longitude.toFixed(3);
+                }
+                _semafloorRef.child(authData.uid).set({
+                  email: _email,
+                  password: _password,
+                  provider: 'password',
+                  fname: _fname,
+                  lname: _lname,
+                  createdTime: Firebase.ServerValue.TIMESTAMP,
+                  createdLocation: {
+                    lat: _lat,
+                    long: _long
+                  }
+                });
+                // console.log(_semafloorRef.child(userData.uid));
+                // console.log(userData, location.coords);
+                _semafloorRef.offAuth(_saveUserDataCallback);
+                _semafloorRef.unauth();
+                _self._readyToOffAuth = true;
+                // console.log('unauth-ed');
+                // console.log(_self._readyToOffAuth);
+              });
+            }
+          };
+
+          // detect for user auth stat.
+          _semafloorRef.onAuth(_saveUserDataCallback);
+          _self.fire('show-login-pages', {errorSuccess: 'Success! You can now login to Semafloor.'});
+        }
+      });
+    },
+
+
+  }
+</script>
