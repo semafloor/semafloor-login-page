@@ -15,6 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="login-pages.html">
 <link rel="import" href="provider-login-page.html">
 <link rel="import" href="signup-page.html">
+<link rel="import" href="approved-login-page.html">
 
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-slider/paper-slider.html">
@@ -63,6 +64,9 @@ Example:
             <signup-page id="signupPage" class="signup-page"
               data-page="signup"></signup-page>
 
+            <approved-login-page id="approvedLogin" class="approved-page"
+              data-page="approved" user="[[_userData]]" status="[[_statusKnown]]"></approved-login-page>
+
            </neon-animated-pages>
         </div>
       </template>
@@ -95,6 +99,8 @@ Example:
         value: 'info'
       },
       _providerName: String,
+      _userData: Object,
+      _statusKnown: Boolean,
 
     },
 
@@ -103,7 +109,9 @@ Example:
       'prev-info-page': '_onPrevInfoPage',
       'show-login-pages': '_showLoginPages',
       'show-provider-login': '_showProviderLogin',
-      'show-signup-page': '_showSignupPage'
+      'show-signup-page': '_showSignupPage',
+      'show-approved-login': '_showApprovedLogin',
+      'logout-approved-login': '_logoutApprovedLogin'
     },
 
     _onNextInfoPage: function(ev) {
@@ -139,6 +147,16 @@ Example:
       console.log('show-signup');
       this.set('_pages', 'signup');
       this.$$('#signupPage').measureHeaderHeight();
+    },
+
+    _showApprovedLogin: function (ev) {
+      this.set('_userData', ev.detail.user);
+      this.set('_statusKnown', ev.detail.status);
+      this.set('_pages', 'approved');
+    },
+
+    _logoutApprovedLogin: function (ev) {
+      this.set('_pages', 'login');
     },
 
     // Element Lifecycle

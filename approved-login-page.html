@@ -1,0 +1,47 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="approved-login-page-theme.html">
+
+<link rel="import" href="../paper-button/paper-button.html">
+
+<link rel="import" href="../firebase-element/firebase-auth.html">
+
+<dom-module id="approved-login-page">
+  <template>
+    <style include="approved-login-page-theme"></style>
+
+    <firebase-auth id="firebaseApproved" location="https://semafloor-webapp.firebaseio.com/users"></firebase-auth>
+
+    <!-- <firebase-auth id="firebaseLogin"
+-     provider="[[_providerCls]]"
+-     location="https://semafloor-webapp.firebaseio.com/users"
+      redirect
+      user="{{_userAuth}}"
+-     on-error="_onLoginError"
+-     on-user-created="_onLoginSuccess"></firebase-auth> -->
+
+    <div class="">
+      <h1>Approved Login Page</h1>
+      <span>Logged in from [[user.provider]]</span>
+      <span>as [[user.facebook.displayName]]</span>
+
+      <paper-button raised on-tap="_logoutApprovedLogin">button</paper-button>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'approved-login-page',
+
+      properties: {
+        user: Object,
+        status: Boolean,
+      },
+
+      _logoutApprovedLogin: function (ev) {
+        this.$.firebaseApproved.logout();
+        this.fire('logout-approved-login');
+      },
+
+    });
+  </script>
+</dom-module>
