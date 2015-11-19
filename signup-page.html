@@ -30,11 +30,11 @@
   <template strip-whitespace>
     <style include="signup-page-theme"></style>
 
-    <firebase-auth id="firebaseSignup"
+    <!-- <firebase-auth id="firebaseSignup"
       provider="password"
       location="https://semafloor-webapp.firebaseio.com/users"
       on-error="_onSignupError"
-      on-user-created="_onSignupSuccess"></firebase-auth>
+      on-user-created="_onSignupSuccess"></firebase-auth> -->
 
     <paper-scroll-header-panel id="signupScrollHeaderPanel" class="flex signup-scroll-header-panel" mode="waterfall">
       <paper-toolbar id="signupToolbar" class="paper-header tall">
@@ -60,11 +60,13 @@
         </p>
         <form id="signupForm" is="iron-form" class="signup-form"
           action="index.html" method="post">
-          <paper-input class="signup-input" name="email" label="Email Address"
+          <paper-input id="signupEmail" class="signup-input" name="email" label="Email Address"
             type="text"
             auto-validate
             required
             error-message="Invalid Email Address!"
+            on-focus="_resetErrorMessage"
+            on-blur="_checkExistingEmailFromInput"
             pattern="\w\S+@\w\S+\.\S+"></paper-input>
           <paper-input class="signup-input" name="password" label="Password"
             type="password"
@@ -83,7 +85,7 @@
         </form>
         <div class="layout horizontal center-center paper-fab-container">
           <paper-fab class="submit-form-to-signup" icon="icons:send" mini
-            disabled="[[!_readnAgree]]" on-tap="_submitFormToSignup" on-transitionend="_transitionendAction"></paper-fab>
+            disabled="[[!_disableSubmit]]" on-tap="_submitFormToSignup" on-transitionend="_transitionendAction"></paper-fab>
         </div>
       </div>
 
@@ -147,7 +149,11 @@
 
         _hasTransitionended: Boolean,
         _readnAgree: Boolean,
-
+        _disableSubmit: {
+          type: Boolean,
+          value: false,
+          computed: '_computedDisableSubmit(_readnAgree, _readyToRegister)'
+        },
       },
 
       listeners: {
@@ -168,8 +174,12 @@
         console.log(ev.target.request.body);
         var _body = ev.target.request.body;
         ev.preventDefault();
-        // this.$.firebaseSignup.createUser(_body.email, _body.password);
-        this._semafloorCreateUser(_body.email, _body.password, _body.fname, _body.lname);
+
+        if (this._readyToRegister) {
+          console.log('ready-to-register');
+          this._semafloorCreateUser(_body.email, _body.password, _body.fname, _body.lname);
+        }
+        console.log('try-again');
       },
 
       _transitionendAction: function (ev) {
@@ -216,18 +226,10 @@
         }
       },
 
-      // Firebase event handlers methods
-      _onSignupError: function (ev) {
-        // this._message = 'Error: ' + ev.detail.message;
-        console.log(ev);
-        this.fire('show-login-pages', {errorSuccess: ev.detail.code + ': ' + ev.detail.message});
-        this.fire('signup-error', {error: ev.detail.code + ': ' + ev.detail.message})
-      },
-
-      _onSignupSuccess: function (ev) {
-        console.log(ev);
-        this.fire('show-login-pages', {errorSuccess: 'Success! You can now login to Semafloor.'});
-        this.fire('signup-success', {success: 'Success! You can now login to Semafloor.'});
+      _computedDisableSubmit: function(_readnAgree, _readyToRegister, _signupEmail, _signupPassword, _signupFirstname, _signupLastname) {
+        console.log('compute disableSubmit');
+        console.log(_readnAgree, _readyToRegister);
+        return _readnAgree && _readyToRegister;
       },
 
     });

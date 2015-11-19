@@ -2,13 +2,18 @@
 
 <script>
   var Semafloor = Semafloor || {};
-  var _semafloorRef = new Firebase('https://semafloor-webapp.firebaseio.com/users/password');
+  var _semafloorRef = new Firebase('https://semafloor-webapp.firebaseio.com');
 
   Semafloor.signupPageBehavior = {
     properties: {
       _readyToOffAuth: {
-        type: Boolean
-      }
+        type: Boolean,
+        value: false
+      },
+      _readyToRegister: {
+        type: Boolean,
+        value: false
+      },
     },
 
     listeners: {
@@ -36,13 +41,14 @@
             // console.log('ref-on-auth', _self._readyToOffAuth);
             if (authData && authData.uid === userData.uid) {
               // console.log(authData.uid === userData.uid);
+              console.log(authData.uid, userData.uid);
               window.navigator.geolocation.getCurrentPosition(function (location) {
                 var _lat = 0, _long = 0;
                 if (location) {
                   _lat = location.coords.latitude.toFixed(3);
                   _long = location.coords.longitude.toFixed(3);
                 }
-                _semafloorRef.child(authData.uid).set({
+                _semafloorRef.child('users/password').child(authData.uid).set({
                   email: _email,
                   password: _password,
                   provider: 'password',
@@ -54,6 +60,10 @@
                     long: _long
                   }
                 });
+
+                // collect all emails.
+                _semafloorRef.child('emails').push(_email);
+
                 // console.log(_semafloorRef.child(userData.uid));
                 // console.log(userData, location.coords);
                 _semafloorRef.offAuth(_saveUserDataCallback);
@@ -70,6 +80,37 @@
           _self.fire('show-login-pages', {errorSuccess: 'Success! You can now login to Semafloor.'});
         }
       });
+    },
+
+    _checkExistingEmailFromInput: function(ev){
+      var _self = this,
+          _target = ev.target,
+          _inputEmail = _target.value;
+
+      _semafloorRef.child('emails').once('value', function (snapshot) {
+        snapshot.forEach(function(data){
+          if (data.val() === _inputEmail) {
+
+            _self.set('_readyToRegister', false);
+            _target.errorMessage = 'Email is already registered!';
+            _target.invalid = true;
+
+            // break the forEach loop according to Firebase's API doc.
+            return true;
+          }else {
+            _self.set('_readyToRegister', true);
+          }
+        });
+      }, function(err){console.log(err);});
+    },
+
+    _resetErrorMessage: function (ev) {
+      // disable form submit until existingEmail check completes.
+      this.set('_readyToRegister', false);
+      console.log('_reset-error-message');
+      var _target = ev.target;
+      _target.invalid = false;
+      _target.errorMessage = 'Invalid Email Message!';
     },
 
 
