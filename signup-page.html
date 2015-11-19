@@ -24,17 +24,11 @@
 <link rel="import" href="slide-from-bottom-animation.html">
 <link rel="import" href="slide-from-top-animation.html">
 
-<link rel="import" href="../firebase-element/firebase-auth.html">
+<!-- <link rel="import" href="../firebase-element/firebase-auth.html"> -->
 
 <dom-module id="signup-page">
   <template strip-whitespace>
     <style include="signup-page-theme"></style>
-
-    <!-- <firebase-auth id="firebaseSignup"
-      provider="password"
-      location="https://semafloor-webapp.firebaseio.com/users"
-      on-error="_onSignupError"
-      on-user-created="_onSignupSuccess"></firebase-auth> -->
 
     <paper-scroll-header-panel id="signupScrollHeaderPanel" class="flex signup-scroll-header-panel" mode="waterfall">
       <paper-toolbar id="signupToolbar" class="paper-header tall">
@@ -226,7 +220,7 @@
         }
       },
 
-      _computedDisableSubmit: function(_readnAgree, _readyToRegister, _signupEmail, _signupPassword, _signupFirstname, _signupLastname) {
+      _computedDisableSubmit: function(_readnAgree, _readyToRegister) {
         console.log('compute disableSubmit');
         console.log(_readnAgree, _readyToRegister);
         return _readnAgree && _readyToRegister;
