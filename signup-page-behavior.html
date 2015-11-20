@@ -6,10 +6,6 @@
 
   Semafloor.signupPageBehavior = {
     properties: {
-      _readyToOffAuth: {
-        type: Boolean,
-        value: false
-      },
       _readyToRegister: {
         type: Boolean,
         value: false
@@ -35,10 +31,8 @@
             password: _password
           }, function(error){if (error){console.log(error);}});
 
-          var _readyToOffAuth = this._readyToOffAuth;
           function _saveUserDataCallback(authData) {
             // compare read and create.
-            // console.log('ref-on-auth', _self._readyToOffAuth);
             if (authData && authData.uid === userData.uid) {
               // console.log(authData.uid === userData.uid);
               console.log(authData.uid, userData.uid);
@@ -68,9 +62,6 @@
                 // console.log(userData, location.coords);
                 _semafloorRef.offAuth(_saveUserDataCallback);
                 _semafloorRef.unauth();
-                _self._readyToOffAuth = true;
-                // console.log('unauth-ed');
-                // console.log(_self._readyToOffAuth);
               });
             }
           };

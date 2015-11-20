@@ -8,16 +8,27 @@
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-toast/paper-toast.html">
 
-<link rel="import" href="../neon-animation/neon-animations.html">
+<link rel="import" href="../firebase-element/firebase-auth.html">
 
 <link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
 <link rel="import" href="../neon-animation/animations/hero-animation.html">
+
+
+<link rel="import" href="../neon-animation/neon-animations.html">
 
 <dom-module id="login-pages">
   <template strip-whitespace>
     <style include="login-pages-theme"></style>
 
     <div id="placeholder" class="fit"></div>
+
+    <firebase-auth id="firebaseLogin"
+      provider="[[_providerToLogin]]"
+      location="https://semafloor-webapp.firebaseio.com/users"
+      redirect
+      user="{{_userLoginAuth}}"
+      status-known="{{_userStatusKnown}}"
+      on-error="_onFirebaseError"></firebase-auth>
 
     <div id="loginPagesContainer" class="login-pages-container layout vertical flex-auto">
       <div class="product-image-container layout vertical center-center">
@@ -41,6 +52,9 @@
             auto-validate
             required error-message="Password required!"></paper-input>
           <paper-checkbox id="loginCheckbox" class="semafloor-login-checkbox layout horizontal center-center" name="remember">Login Automatically</paper-checkbox>
+          <div class="semafloor-login-button-wrapper layout horizontal center-center">
+            <paper-button class="semafloor-login-button" on-down="_buttonDown" on-up="_buttonUp" data-icon="password" raised>Login</paper-button>
+          </div>
 
           <div class="provider-login-separator">
             <hr>
@@ -61,7 +75,7 @@
           <paper-ripple></paper-ripple>
         </iron-image>
         <iron-image class="gplus-icon"
-          data-icon="gplus"
+          data-icon="google"
           src="social-sites-icons/gplus.png" preload sizing="cover" fade>
           <paper-ripple></paper-ripple>
         </iron-image>
@@ -133,49 +147,58 @@
               'providerToLogin': this
             }
           }
-        }
+        },
+
+        _userLoginAuth: Object,
+        _userStatusKnown: Boolean,
+
+      },
+
+      listeners: {
+        'iron-form-presubmit': '_onIronFormPresubmit'
       },
 
       _iconDown: function (ev) {
-        // console.log('icon-tap', ev);
         var _imgTarget = ev.target;
 
         while (_imgTarget && _imgTarget.tagName !== 'IRON-IMAGE') {
           _imgTarget = _imgTarget.parentElement;
         }
 
-        if (_imgTarget) {
-          this.set('animationConfig.exit', [{
-            name: 'fade-out-animation',
-            node: this
-          }, {
-            name: 'hero-animation',
-            id: 'loginToProvider',
-            fromPage: this
-          }]);
-          this.set('sharedElements.loginToProvider', ev.target.parentElement);
-          _imgTarget.classList.add('pressed');
-        }
+        this.set('_providerToLogin', _imgTarget.getAttribute('data-icon'));
       },
 
       _iconUp: function (ev) {
-        // console.log(this.sharedElements);
-        var _imgTarget = ev.target, _iconName;
+        console.log('icon-up', ev);
+        this.$.firebaseLogin.login();
+      },
 
-        while (_imgTarget && _imgTarget.tagName !== 'IRON-IMAGE') {
-          _imgTarget = _imgTarget.parentElement;
-        }
+      _onIronFormPresubmit: function (ev) {
+        // console.log(ev.target.request.body);
+        var _body = ev.target.request.body;
+        ev.preventDefault();
+        this.$.firebaseLogin.login({
+          email: _body.email,
+          password: _body.password
+        });
+      },
 
-        if (_imgTarget && _imgTarget.hasAttribute('data-icon')) {
-          _iconName = _imgTarget.getAttribute('data-icon');
-          // console.log(_imgTarget);
-          _imgTarget.classList.remove('pressed');
-          this.set('animationConfig.entry', []);
-          this.fire('show-provider-login', {provider: _iconName});
+      _buttonDown: function (ev) {
+        // console.log(ev);
+        var _target = ev.target;
+
+        if (_target.tagName === 'PAPER-BUTTON') {
+          this.set('_providerToLogin', _target.getAttribute('data-icon'));
         }
       },
 
+      _buttonUp: function (ev) {
+        console.log(ev);
+        this.$.loginForm.submit();
+      },
+
       updateAnimationConfigFromProviderToLogin: function (_providerName) {
+        // to be removed.
         if (_providerName) {
           this.animationConfig.entry.push({
             name: 'hero-animation',
@@ -186,7 +209,7 @@
             node: this
           });
         }else {
-          console.log('null-entry');
+          // console.log('no-entry-animation-at-login-page');
           this.set('animationConfig.entry', []);
         }
       },
@@ -204,10 +227,26 @@
       updateToastText: function (_text) {
         this.$.signupToast.text = _text;
         this.async(function () {
-          console.log('haha');
+          console.log('error-or-success-show-toast');
           this.$.signupToast.show();
         }, 500);
       },
+
+      _onFirebaseError: function (ev) {
+        console.log(ev.detail.code + ': ' + ev.detail.message);
+        this.$.signupToast.text = ev.detail.code + ': ' + ev.detail.message;
+        this.$.signupToast.show();
+      },
+
+      // _onFirebaseLogin: function (ev) {
+      //   // console.log(this.$.firebaseLogin.statusKnown);
+      //   // console.log(this.$.firebaseLogin.user);
+      //   // console.log(this._userLoginAuth);
+      //   // console.log(ev);
+      //
+      //   // divert to login page.
+      //   this.fire('show-approved-login', {user: this._userLoginAuth, status: this._userStatusKnown});
+      // },
 
     });
   </script>

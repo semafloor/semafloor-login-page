@@ -13,7 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="info-pages.html">
 <link rel="import" href="info-pages-behavior.html">
 <link rel="import" href="login-pages.html">
-<link rel="import" href="provider-login-page.html">
+<!-- <link rel="import" href="provider-login-page.html"> -->
 <link rel="import" href="signup-page.html">
 <link rel="import" href="approved-login-page.html">
 
@@ -64,37 +64,19 @@ Example:
           <login-pages id="loginPages" class="login-page"
             data-page="login"></login-pages>
 
-
           <signup-page id="signupPage" class="signup-page"
             data-page="signup"></signup-page>
         </neon-animated-pages>
       </template>
 
       <template is="dom-if" if="[[!_firstTimeLogin]]" restamp="true">
-      </template>
-
-      <!-- <template>
-        <div class="info-page-content flex-auto layout vertical">
-           <neon-animated-pages id="pages" class="layout vertical flex-auto"
-             selected="{{_pages}}"
-             attr-for-selected="data-page">
-
-          <provider-login-page id="providerLoginPage" class="provider-login-page"
-            data-page="provider" provider-name="[[_providerName]]"></provider-login-page>
-
-            <login-pages id="loginPages" class="login-page"
-              data-page="login"></login-pages>
-
-
-
-           </neon-animated-pages>
-        </div>
-      </template>
-
-      <template is="dom-if" if="{{!_firstTimeLogin}}" restamp="true">
         <approved-login-page id="approvedLogin" class="approved-page"
-          data-page="approved" user="[[_userData]]" status="[[_statusKnown]]"></approved-login-page>
-      </template> -->
+          data-page="approved"
+          user="[[_userData]]"
+          status="[[_statusKnown]]"
+          login-localstorage="[[_loginLocalstorage]]"></approved-login-page>
+      </template>
+
     </div>
   </template>
 
@@ -109,15 +91,11 @@ Example:
     behaviors: [Semafloor.infoPagesBehavior],
 
     properties: {
-      _firstTimeLogin: {
-        type: Boolean,
-        value: true
-      },
+      _firstTimeLogin: Boolean,
       _pages: {
         type: String,
         value: 'info'
       },
-      _providerName: String,
       _userData: Object,
       _statusKnown: Boolean,
 
@@ -127,7 +105,6 @@ Example:
       'next-info-page': '_onNextInfoPage',
       'prev-info-page': '_onPrevInfoPage',
       'show-login-pages': '_showLoginPages',
-      'show-provider-login': '_showProviderLogin',
       'show-signup-page': '_showSignupPage',
       'show-approved-login': '_showApprovedLogin',
       'logout-approved-login': '_logoutApprovedLogin'
@@ -142,11 +119,9 @@ Example:
     },
 
     _showLoginPages: function (ev) {
-      if (ev.detail.fromPage) {
-        this.$$('#loginPages').updateAnimationConfigFromProviderToLogin(ev.detail.fromPage);
-        this.set('_pages', 'login');
-      }
-
+      // if (ev.detail.fromPage) {
+      //   this.$$('#loginPages').updateAnimationConfigFromProviderToLogin(ev.detail.fromPage);
+      // }
       if (ev.detail.errorSuccess) {
         console.log('error or success');
         this.$$('#loginPages').updateAnimationConfigFromProviderToLogin();
@@ -154,25 +129,14 @@ Example:
         this.$$('#loginPages').updateToastText(ev.detail.errorSuccess);
       }
 
-      if (ev.detail.bypassInfo) {
-        this.set('_firstTimeLogin', false);
+      if (ev.detail.signupCancel) {
+        this.$$('#loginPages').updateAnimationConfigFromProviderToLogin();
+        this.set('_pages', 'login');
       }
-
-      // if (!ev.detail.firstTimeLogin) {
-      //   this.set('_firstTimeLogin', ev.detail.firstTimeLogin);
-      //   this.set('_pages', 'login');
-      // }
-
+      
       else {
         this.set('_pages', 'login');
       }
-    },
-
-    _showProviderLogin: function (ev) {
-      this.set('_providerName', ev.detail.provider);
-      this.set('_pages', 'provider');
-      this.$$('#providerLoginPage').measureHeaderHeight();
-      console.log(ev.detail.provider);
     },
 
     _showSignupPage: function (ev) {
@@ -186,13 +150,10 @@ Example:
       this.set('_userData', ev.detail.user);
       this.set('_statusKnown', ev.detail.status);
       this.set('_firstTimeLogin', false);
-      // this.set('_pages', 'approved');
     },
 
     _logoutApprovedLogin: function (ev) {
-      // this.set('_pages', 'login');
-      this.set('_statusKnown', null);
-      this.set('_userData', {});
+      console.log('logout-approved-login');
       this.set('_firstTimeLogin', true);
       this.set('_pages', 'login');
     },

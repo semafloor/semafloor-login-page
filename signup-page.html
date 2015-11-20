@@ -155,7 +155,7 @@
       },
 
       _goBackLoginPages: function (ev) {
-        this.fire('show-login-pages');
+        this.fire('show-login-pages', {signupCancel: true});
       },
 
       _submitFormToSignup: function (ev) {
@@ -168,6 +168,8 @@
         console.log(ev.target.request.body);
         var _body = ev.target.request.body;
         ev.preventDefault();
+
+        this._resetIronForm();
 
         if (this._readyToRegister) {
           console.log('ready-to-register');
@@ -184,6 +186,10 @@
           if (this._hasTransitionended) {
             this.set('_hasTransitionended', false);
             this.$.signupForm.submit();
+
+            // reset the form by firing the reset event.
+            this._resetIronForm();
+
             console.log(ev);
             // console.log(this.$.signupForm.request.body);
           }
@@ -223,6 +229,18 @@
       _computedDisableSubmit: function(_readnAgree, _readyToRegister) {
         console.log('compute disableSubmit');
         return _readnAgree && _readyToRegister;
+      },
+
+      _resetIronForm: function() {
+        // fire reset event to reset the values of all inputs.
+        this.$.signupForm.fire('reset');
+        // reinitialize all the invalid flags of all inputs.
+        this.async(function() {
+          var _paperInputArray = this.$.signupForm.querySelectorAll('paper-input');
+          for (var el, i = 0; el = _paperInputArray[i], i < _paperInputArray.length; i++) {
+            el.invalid = false;
+          }
+        }, 1);
       },
 
     });
