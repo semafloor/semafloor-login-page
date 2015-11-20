@@ -17,6 +17,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="signup-page.html">
 <link rel="import" href="approved-login-page.html">
 
+<link rel="import" href="../iron-localstorage/iron-localstorage.html">
+
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-slider/paper-slider.html">
 <link rel="import" href="../paper-button/paper-button.html">
@@ -42,40 +44,57 @@ Example:
   <template strip-whitespace>
     <style include="semafloor-login-page-theme"></style>
 
+    <iron-localstorage
+      name="semafloor-firsttime-login"
+      value="{{_firstTimeLogin}}"
+      on-iron-localstorage-load-empty="_initializeDefaultFirstTimeLogin"></iron-localstorage>
+
     <div class="semafloor-login-page-container flex-auto layout vertical">
-      <template is="dom-if" if="{{_firstTimeLogin}}" restamp="true">
+      <template is="dom-if" if="[[_firstTimeLogin]]" restamp="true">
         <!-- <button data-btn="prev" on-tap="_btn">Prev</button>
         <button data-btn="next" on-tap="_btn">Next</button> -->
+
+        <neon-animated-pages id="pages" class="first-time-page flex-auto"
+          selected="[[_pages]]"
+          attr-for-selected="data-page">
+          <info-pages id="infoPages" class="info-pages"
+            data-page="info"
+            on-track="_trackHandler" on-down="_downHandler" on-up="_upHandler"></info-pages>
+
+          <login-pages id="loginPages" class="login-page"
+            data-page="login"></login-pages>
+
+
+          <signup-page id="signupPage" class="signup-page"
+            data-page="signup"></signup-page>
+        </neon-animated-pages>
+      </template>
+
+      <template is="dom-if" if="[[!_firstTimeLogin]]" restamp="true">
+      </template>
+
+      <!-- <template>
         <div class="info-page-content flex-auto layout vertical">
            <neon-animated-pages id="pages" class="layout vertical flex-auto"
              selected="{{_pages}}"
              attr-for-selected="data-page">
 
-             <info-pages id="infoPages" class="info-pages"
-               data-page="info"
-               on-track="_trackHandler" on-down="_downHandler" on-up="_upHandler"></info-pages>
+          <provider-login-page id="providerLoginPage" class="provider-login-page"
+            data-page="provider" provider-name="[[_providerName]]"></provider-login-page>
 
             <login-pages id="loginPages" class="login-page"
               data-page="login"></login-pages>
 
-            <provider-login-page id="providerLoginPage" class="provider-login-page"
-              data-page="provider" provider-name="[[_providerName]]"></provider-login-page>
 
-            <signup-page id="signupPage" class="signup-page"
-              data-page="signup"></signup-page>
-
-            <approved-login-page id="approvedLogin" class="approved-page"
-              data-page="approved" user="[[_userData]]" status="[[_statusKnown]]"></approved-login-page>
 
            </neon-animated-pages>
         </div>
       </template>
 
       <template is="dom-if" if="{{!_firstTimeLogin}}" restamp="true">
-        <div class="login-page-content">
-          <h1>Login Page</h1>
-        </div>
-      </template>
+        <approved-login-page id="approvedLogin" class="approved-page"
+          data-page="approved" user="[[_userData]]" status="[[_statusKnown]]"></approved-login-page>
+      </template> -->
     </div>
   </template>
 
@@ -126,12 +145,25 @@ Example:
       if (ev.detail.fromPage) {
         this.$$('#loginPages').updateAnimationConfigFromProviderToLogin(ev.detail.fromPage);
         this.set('_pages', 'login');
-      }else if (ev.detail.errorSuccess) {
+      }
+
+      if (ev.detail.errorSuccess) {
         console.log('error or success');
         this.$$('#loginPages').updateAnimationConfigFromProviderToLogin();
         this.set('_pages', 'login');
         this.$$('#loginPages').updateToastText(ev.detail.errorSuccess);
-      }else {
+      }
+
+      if (ev.detail.bypassInfo) {
+        this.set('_firstTimeLogin', false);
+      }
+
+      // if (!ev.detail.firstTimeLogin) {
+      //   this.set('_firstTimeLogin', ev.detail.firstTimeLogin);
+      //   this.set('_pages', 'login');
+      // }
+
+      else {
         this.set('_pages', 'login');
       }
     },
@@ -150,12 +182,18 @@ Example:
     },
 
     _showApprovedLogin: function (ev) {
+      console.log('show-approved-login');
       this.set('_userData', ev.detail.user);
       this.set('_statusKnown', ev.detail.status);
-      this.set('_pages', 'approved');
+      this.set('_firstTimeLogin', false);
+      // this.set('_pages', 'approved');
     },
 
     _logoutApprovedLogin: function (ev) {
+      // this.set('_pages', 'login');
+      this.set('_statusKnown', null);
+      this.set('_userData', {});
+      this.set('_firstTimeLogin', true);
       this.set('_pages', 'login');
     },
 
@@ -214,6 +252,11 @@ Example:
      */
     fireLasers: function() {
       this.fire('semafloor-login-page-lasers', {sound: 'Pew pew!'});
+    },
+
+    _initializeDefaultFirstTimeLogin: function () {
+      console.log('initialize-default-login');
+      this._firstTimeLogin = true;
     },
 
   });

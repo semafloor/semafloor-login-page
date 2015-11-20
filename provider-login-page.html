@@ -224,7 +224,26 @@
         console.log(this.$.firebaseLogin.statusKnown);
         console.log(this.$.firebaseLogin.user);
         console.log(ev);
-        this.fire('show-approved-login', {status: ev.target.statusKnown, user: ev.detail.user});
+        var _self = this;
+        var _ref = this.$.firebaseLogin.ref;
+
+        ev.preventDefault();
+
+        setTimeout(function() {
+          _ref.onAuth(function authDataCallback(authData) {
+            if (authData) {
+              console.log("User " + authData.uid + " is logged in with " + authData.provider);
+              _self.fire('show-approved-login', {status: ev.target.statusKnown, user: ev.detail.user});
+            } else {
+              console.log("User is logged out");
+            }
+          });
+        }, 500);
+
+        // if (ev.detail.user) {
+        //   var _self = this;
+        //   _self.fire('show-approved-login', {status: ev.target.statusKnown, user: ev.detail.user});
+        // }
       },
 
     });

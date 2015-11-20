@@ -1,6 +1,8 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="login-pages-theme.html">
+
 <link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="../iron-form/iron-form.html">
 
 <link rel="import" href="../paper-ripple/paper-ripple.html">
 <link rel="import" href="../paper-button/paper-button.html">
@@ -24,8 +26,30 @@
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium iure odio nesciunt, sequi ut expedita.
         </p>
       </div>
-      <div id="providerSelectionContainer" class="social-sites-container layout horizontal around-justified wrap"
-        on-down="_iconDown" on-up="_iconUp">
+
+      <div class="login-form-container">
+        <form id="loginForm" is="iron-form" class="semafloor-login-form"
+          action="/semafloor-login" method="post">
+          <paper-input class="semafloor-login-input" name="email" label="Email Address"
+            type="text"
+            auto-validate
+            required
+            error-message="Invalid Email Address!"
+            pattern="\w\S+@\w\S+\.\S+"></paper-input>
+          <paper-input class="semafloor-login-input" name="password" label="Password"
+            type="password"
+            auto-validate
+            required error-message="Password required!"></paper-input>
+          <paper-checkbox id="loginCheckbox" class="semafloor-login-checkbox layout horizontal center-center" name="remember">Login Automatically</paper-checkbox>
+
+          <div class="provider-login-separator">
+            <hr>
+            <span>OR <span class="small-text">login with: </span></span>
+          </div>
+        </form>
+      </div>
+
+      <div id="providerSelectionContainer" class="social-sites-container layout horizontal around-justified wrap center"  on-down="_iconDown" on-up="_iconUp">
         <iron-image class="facebook-icon"
           data-icon="facebook"
           src="social-sites-icons/facebook.png" preload sizing="cover" fade>
@@ -46,13 +70,13 @@
           src="social-sites-icons/github.png" preload sizing="cover" fade>
           <paper-ripple></paper-ripple>
         </iron-image>
-        <iron-image class="email-icon"
+        <!-- <iron-image class="email-icon"
           data-icon="email"
           src="social-sites-icons/email.png" preload sizing="cover" fade>
           <paper-ripple></paper-ripple>
-        </iron-image>
+        </iron-image> -->
       </div>
-      <div class="create-new-account">
+      <div class="create-new-account layout horizontal center-center">
         <span>Don't have an account? </span>
         <paper-button class="sign-up-button" on-tap="_createNewAccount">Sign up</paper-button>
       </div>
