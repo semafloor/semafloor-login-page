@@ -32,34 +32,35 @@
             if (authData && authData.uid === userData.uid) {
               // console.log(authData.uid === userData.uid);
               console.log(authData.uid, userData.uid);
-              window.navigator.geolocation.getCurrentPosition(function (location) {
-                var _lat = 0, _long = 0;
-                if (location) {
-                  _lat = location.coords.latitude.toFixed(3);
-                  _long = location.coords.longitude.toFixed(3);
-                }
-                _semafloorRef.child('users/password').child(authData.uid).set({
-                  email: _email,
-                  password: _password,
-                  provider: 'password',
-                  fname: _fname,
-                  lname: _lname,
-                  createdTime: Firebase.ServerValue.TIMESTAMP,
-                  createdLocation: {
-                    lat: _lat,
-                    long: _long
-                  }
-                });
-
-                // collect all emails.
-                _semafloorRef.child('emails').push(_email);
-
-                // console.log(_semafloorRef.child(userData.uid));
-                // console.log(userData, location.coords);
-                _semafloorRef.offAuth(_saveUserDataCallback);
-                _semafloorRef.unauth();
-                _self.fire('show-login-pages', {errorSuccess: 'Success! You can now login to Semafloor.'});
+              // window.navigator.geolocation.getCurrentPosition(function (location) {
+              //   var _lat = 0, _long = 0;
+              //   if (location) {
+              //     _lat = location.coords.latitude.toFixed(3);
+              //     _long = location.coords.longitude.toFixed(3);
+              //   }
+              //
+              // });
+                // createdLocation: {
+                //   lat: _lat,
+                //   long: _long
+                // }
+              _semafloorRef.child('users/password').child(authData.uid).set({
+                email: _email,
+                password: _password,
+                provider: 'password',
+                fname: _fname,
+                lname: _lname,
+                createdTime: Firebase.ServerValue.TIMESTAMP,
               });
+
+              // collect all emails.
+              _semafloorRef.child('emails').push(_email);
+
+              // console.log(_semafloorRef.child(userData.uid));
+              // console.log(userData, location.coords);
+              _semafloorRef.offAuth(_saveUserDataCallback);
+              _semafloorRef.unauth();
+              _self.fire('show-login-pages', {errorSuccess: 'Success! You can now login to Semafloor.'});
             }
           };
 
