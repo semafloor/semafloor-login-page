@@ -1,0 +1,142 @@
+<dom-module id="provider-login-page-theme">
+  <template>
+    <style>
+      :host {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+
+        display: block;
+        @apply(--layout-vertical);
+      }
+
+      *, *::before, *::after {
+        box-sizing: inherit;
+      }
+
+      iron-image {
+        position: absolute;
+        top: 3px;
+        width: 112px;
+        height: 112px;
+      }
+
+      iron-image.gplus-icon,
+      div.icon-background div.icon-background-inset.gplus-special {
+        border-radius: 50%
+      }
+
+      .icon-background {
+        position: absolute;
+        width: 112px;
+        height: 112px;
+      }
+      .icon-background .icon-background-inset {
+        position: relative;
+        background: #ffffff;
+        margin: 8px;
+        width: 100px;
+        height: 100px;
+      }
+
+      .provider-name {
+        padding-left: 24px;
+        text-transform: capitalize;
+      }
+
+      paper-toolbar.toolbar-for-facebook,
+      paper-fab.submit-form-to-login.facebook {
+        background: #1A237E;
+      }
+      paper-toolbar.toolbar-for-twitter,
+      paper-fab.submit-form-to-login.twitter {
+        background: #29B6F6;
+      }
+      paper-toolbar.toolbar-for-gplus,
+      paper-fab.submit-form-to-login.gplus {
+        background: #DC4639;
+      }
+      paper-toolbar.toolbar-for-github,
+      paper-fab.submit-form-to-login.github {
+        background: #000000;
+      }
+      paper-toolbar.toolbar-for-email,
+      paper-fab.submit-form-to-login.email {
+        background: #009688;
+      }
+
+      paper-icon-button {
+        margin-top: 16px;
+        margin-right: 16px;
+      }
+
+      .provider-content {
+        padding: 24px 40px;
+        min-height: 511px;
+      }
+
+      .provider-login-form {
+        padding: 24px 0;
+      }
+
+      form.provider-login-form
+      paper-checkbox {
+        margin-top: 24px;
+      }
+
+      paper-input.facebook {
+        --paper-input-container-focus-color: #1A237E;
+        --paper-input-container-input-color: #1A237E;
+      }
+      paper-checkbox.facebook {
+        --paper-checkbox-checked-color: #1A237E;
+        --paper-checkbox-checked-ink-color: #1A237E;
+      }
+      paper-input.twitter {
+        --paper-input-container-focus-color: #29B6F6;
+        --paper-input-container-input-color: #29B6F6;
+      }
+      paper-checkbox.twitter {
+        --paper-checkbox-checked-color: #29B6F6;
+        --paper-checkbox-checked-ink-color: #29B6F6;
+      }
+      paper-input.gplus {
+        --paper-input-container-focus-color: #DC4639;
+        --paper-input-container-input-color: #DC4639;
+        --paper-input-container-invalid-color: #ffa000;
+      }
+      paper-checkbox.gplus {
+        --paper-checkbox-checked-color: #DC4639;
+        --paper-checkbox-checked-ink-color: #DC4639;
+      }
+      paper-input.github {
+        --paper-input-container-focus-color: #000000;
+        --paper-input-container-input-color: #000000;
+      }
+      paper-checkbox.github {
+        --paper-checkbox-checked-color: #000000;
+        --paper-checkbox-checked-ink-color: #000000;
+      }
+      paper-input.email {
+        --paper-input-container-focus-color: #009688;
+        --paper-input-container-input-color: #009688;
+      }
+      paper-checkbox.email {
+        --paper-checkbox-checked-color: #009688;
+        --paper-checkbox-checked-ink-color: #009688;
+      }
+
+      .paper-fab-container {
+        padding: 24px 0;
+      }
+
+    </style>
+
+  </template>
+</dom-module>

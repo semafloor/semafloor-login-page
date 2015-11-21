@@ -12,10 +12,6 @@
       },
     },
 
-    listeners: {
-      'event': 'eventHandlerFn'
-    },
-
     _semafloorCreateUser: function(_email, _password, _fname, _lname) {
       var _self = this;
       _semafloorRef.createUser({
@@ -62,13 +58,13 @@
                 // console.log(userData, location.coords);
                 _semafloorRef.offAuth(_saveUserDataCallback);
                 _semafloorRef.unauth();
+                _self.fire('show-login-pages', {errorSuccess: 'Success! You can now login to Semafloor.'});
               });
             }
           };
 
           // detect for user auth stat.
           _semafloorRef.onAuth(_saveUserDataCallback);
-          _self.fire('show-login-pages', {errorSuccess: 'Success! You can now login to Semafloor.'});
         }
       });
     },

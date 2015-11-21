@@ -28,6 +28,7 @@
       redirect
       user="{{_userLoginAuth}}"
       status-known="{{_userStatusKnown}}"
+      on-login="_onFirebaseLogin"
       on-error="_onFirebaseError"></firebase-auth>
 
     <div id="loginPagesContainer" class="login-pages-container layout vertical flex-auto">
@@ -51,7 +52,7 @@
             type="password"
             auto-validate
             required error-message="Password required!"></paper-input>
-          <paper-checkbox id="loginCheckbox" class="semafloor-login-checkbox layout horizontal center-center" name="remember">Login Automatically</paper-checkbox>
+          <!-- <paper-checkbox id="loginCheckbox" class="semafloor-login-checkbox layout horizontal center-center" name="remember">Login Automatically</paper-checkbox> -->
           <div class="semafloor-login-button-wrapper layout horizontal center-center">
             <paper-button class="semafloor-login-button" on-down="_buttonDown" on-up="_buttonUp" data-icon="password" raised>Login</paper-button>
           </div>
@@ -151,6 +152,8 @@
 
         _userLoginAuth: Object,
         _userStatusKnown: Boolean,
+        _providerToLogin: String,
+        _fromSignupPage: Boolean,
 
       },
 
@@ -165,12 +168,19 @@
           _imgTarget = _imgTarget.parentElement;
         }
 
-        this.set('_providerToLogin', _imgTarget.getAttribute('data-icon'));
+        if (_imgTarget) {
+          this.set('_providerToLogin', _imgTarget.getAttribute('data-icon'));
+        }
       },
 
       _iconUp: function (ev) {
-        console.log('icon-up', ev);
-        this.$.firebaseLogin.login();
+        // console.log('icon-up', ev);
+
+        // or it will login as anonymous.
+        if (this._providerToLogin) {
+          this.$.firebaseLogin.login();
+          console.log('firebase-login');
+        }
       },
 
       _onIronFormPresubmit: function (ev) {
@@ -193,8 +203,11 @@
       },
 
       _buttonUp: function (ev) {
-        console.log(ev);
-        this.$.loginForm.submit();
+        console.log('btn-up:', ev);
+        // or it will login as anonymous.
+        if (this._providerToLogin) {
+          this.$.loginForm.submit();
+        }
       },
 
       updateAnimationConfigFromProviderToLogin: function (_providerName) {
@@ -238,15 +251,21 @@
         this.$.signupToast.show();
       },
 
-      // _onFirebaseLogin: function (ev) {
-      //   // console.log(this.$.firebaseLogin.statusKnown);
-      //   // console.log(this.$.firebaseLogin.user);
-      //   // console.log(this._userLoginAuth);
-      //   // console.log(ev);
-      //
-      //   // divert to login page.
-      //   this.fire('show-approved-login', {user: this._userLoginAuth, status: this._userStatusKnown});
-      // },
+      _onFirebaseLogin: function (ev) {
+        console.log('login-pages-on-login');
+
+        // divert to approved login page from this page.
+        // else signup page will trigger this (investigation ongoing).
+        // only password login on login-page will retain _providerToLogin.
+        // password login from signup page will not make this truthy.
+        if (ev.detail.user.provider === 'password' && !this._providerToLogin) {
+          console.log('from-signup-page-goes-here');
+          return;
+        }
+
+        console.log('login-from-this-page-goes-here');
+        this.fire('show-approved-login', {user: this._userLoginAuth, status: this._userStatusKnown});
+      },
 
     });
   </script>

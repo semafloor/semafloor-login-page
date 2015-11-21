@@ -20,7 +20,7 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^1.1.0",
     "paper-dialog": "PolymerElements/paper-dialog#~1.0.2",
-    "paper-slider": "PolymerElements/paper-slider#~1.0.7",
+    "paper-slider": "PolymerElements/paper-slider#~1.0.8",
     "paper-radio-button": "PolymerElements/paper-radio-button#~1.0.11",
     "paper-radio-group": "PolymerElements/paper-radio-group#~1.0.6",
     "paper-header-panel": "PolymerElements/paper-header-panel#~1.0.5",

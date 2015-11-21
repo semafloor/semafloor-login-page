@@ -58,7 +58,7 @@
                     // console.log(authData[_provider].email);
                     console.log('existing Semafloor user? ' + data.val() === authData[_provider].email);
                     if (data.val() === authData[_provider].email) {
-                      _ifNotNewUser = true;
+                      _notNewUser = true;
 
                       // stop looping.
                       return true;
