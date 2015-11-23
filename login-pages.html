@@ -13,7 +13,7 @@
 
 <link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
 <link rel="import" href="../neon-animation/animations/hero-animation.html">
-<link rel="import" href="../neon-animation/animation/fade-out-animation.html">
+<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="dialog-slide-from-bottom-animation.html">
 
 
@@ -106,17 +106,19 @@
 
     <paper-toast id="signupToast" text=""></paper-toast>
     <paper-dialog id="resetPasswordDialog" with-backdrop entry-animation="dialog-slide-from-bottom-animation" exit-animation="fade-out-animation">
-      <h2>Reset Password</h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, numquam! Tempore voluptatum praesentium atque ipsum voluptatibus quis dolore, restablecer la contraseña.
-        <paper-input class="semafloor-login-input" label="Reset email address"
-          type="text"
-          auto-validate
-          invalid="{{_invalidResetEmail}}"
-          value="{{_resetEmail::input}}"
-          error-message="Invalid Email Address!"
-          pattern="\w\S+@\w\S+\.\S+"></paper-input>
-      </p>
+      <div class="paper-dialog-container">
+        <h2>Reset Password</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, numquam! Tempore voluptatum praesentium atque ipsum voluptatibus quis dolore, restablecer la contraseña.
+          <paper-input class="semafloor-login-input" label="Reset email address"
+            type="text"
+            auto-validate
+            invalid="{{_invalidResetEmail}}"
+            value="{{_resetEmail::input}}"
+            error-message="Invalid Email Address!"
+            pattern="\w\S+@\w\S+\.\S+"></paper-input>
+        </p>
+      </div>
       <div class="buttons reset-password-buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
         <paper-button dialog-confirm on-tap="_confirmResetPassword">Reset</paper-button>
