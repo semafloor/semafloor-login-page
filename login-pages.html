@@ -7,11 +7,14 @@
 <link rel="import" href="../paper-ripple/paper-ripple.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-toast/paper-toast.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
 
 <link rel="import" href="../firebase-element/firebase-auth.html">
 
 <link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
 <link rel="import" href="../neon-animation/animations/hero-animation.html">
+<link rel="import" href="../neon-animation/animation/fade-out-animation.html">
+<link rel="import" href="dialog-slide-from-bottom-animation.html">
 
 
 <link rel="import" href="../neon-animation/neon-animations.html">
@@ -24,7 +27,7 @@
 
     <firebase-auth id="firebaseLogin"
       provider="[[_providerToLogin]]"
-      location="https://semafloor-webapp.firebaseio.com/users"
+      location="https://semafloor-webapp.firebaseio.com"
       redirect
       user="{{_userLoginAuth}}"
       status-known="{{_userStatusKnown}}"
@@ -55,6 +58,10 @@
           <!-- <paper-checkbox id="loginCheckbox" class="semafloor-login-checkbox layout horizontal center-center" name="remember">Login Automatically</paper-checkbox> -->
           <div class="semafloor-login-button-wrapper layout horizontal center-center">
             <paper-button class="semafloor-login-button" on-down="_buttonDown" on-up="_buttonUp" data-icon="password" raised>Login</paper-button>
+          </div>
+          <div class="forgot-password layout horizontal center-center">
+            <span>Forgot password? </span>
+            <paper-button class="forgot-password-button" on-tap="_resetPassword">Reset password</paper-button>
           </div>
 
           <div class="provider-login-separator">
@@ -98,6 +105,23 @@
     </div>
 
     <paper-toast id="signupToast" text=""></paper-toast>
+    <paper-dialog id="resetPasswordDialog" with-backdrop entry-animation="dialog-slide-from-bottom-animation" exit-animation="fade-out-animation">
+      <h2>Reset Password</h2>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, numquam! Tempore voluptatum praesentium atque ipsum voluptatibus quis dolore, restablecer la contraseña.
+        <paper-input class="semafloor-login-input" label="Reset email address"
+          type="text"
+          auto-validate
+          invalid="{{_invalidResetEmail}}"
+          value="{{_resetEmail::input}}"
+          error-message="Invalid Email Address!"
+          pattern="\w\S+@\w\S+\.\S+"></paper-input>
+      </p>
+      <div class="buttons reset-password-buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm on-tap="_confirmResetPassword">Reset</paper-button>
+      </div>
+    </paper-dialog>
 
   </template>
   <script>
@@ -154,11 +178,14 @@
         _userStatusKnown: Boolean,
         _providerToLogin: String,
         _fromSignupPage: Boolean,
+        _resetEmail: String,
+        _invalidResetEmail: Boolean,
 
       },
 
       listeners: {
-        'iron-form-presubmit': '_onIronFormPresubmit'
+        'iron-form-presubmit': '_onIronFormPresubmit',
+        'password-reset': '_onPasswordReset'
       },
 
       _iconDown: function (ev) {
@@ -265,6 +292,33 @@
 
         console.log('login-from-this-page-goes-here');
         this.fire('show-approved-login', {user: this._userLoginAuth, status: this._userStatusKnown});
+      },
+
+      _resetPassword: function (ev) {
+        console.log('Reset Password? ');
+        this.$.resetPasswordDialog.open();
+      },
+
+      _confirmResetPassword: function (ev) {
+        // console.log(ev);
+        var _target = ev.target;
+        if (_target && _target.tagName === 'PAPER-BUTTON') {
+          if (_target.hasAttribute('dialog-confirm')) {
+            if (this._resetEmail && !this._invalidResetEmail) {
+              this.$.firebaseLogin.sendPasswordResetEmail(this._resetEmail);
+            }else {
+              this.updateToastText('Invalid reset email! Please try again.');
+            }
+
+            // reset input and invalid input.
+            this._resetEmail = '';
+            this._validResetEmail = false;
+          }
+        }
+      },
+
+      _onPasswordReset: function (ev) {
+        this.updateToastText('Password reset email sent successfully!')
       },
 
     });
