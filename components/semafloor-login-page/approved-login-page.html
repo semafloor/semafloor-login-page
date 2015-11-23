@@ -1,0 +1,159 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="approved-login-page-theme.html">
+
+<link rel="import" href="../paper-button/paper-button.html">
+
+<dom-module id="approved-login-page">
+  <template>
+    <style include="approved-login-page-theme"></style>
+
+    <div class="">
+      <template is="dom-if" if="[[status]]" restamp="true">
+        <h1>Approved Login Page</h1>
+      </template>
+      <span>Logged in from </span>
+      <span class="user-provider-name">[[user.provider]]</span>
+      <span>as [[_loginDisplayName]]</span>
+
+      <paper-button raised on-tap="_logoutApprovedLogin">button</paper-button>
+    </div>
+
+  </template>
+  <script>
+    // workaround.
+    var _ref = new Firebase('https://semafloor-webapp.firebaseio.com');
+
+    Polymer({
+      is: 'approved-login-page',
+
+      properties: {
+        user: Object,
+        status: Boolean,
+        _loginDisplayName: String,
+      },
+
+      observers: [
+        '_computeProviderName(user.provider)',
+      ],
+
+      ready: function() {
+        console.log('approved-login-ready');
+        var _self = this;
+        _ref.onAuth(function (authData){
+          if (authData) {
+            console.log(authData);
+            var _provider = authData.provider, _checkRef, _notNewUser;
+
+            // check for existing fb user before perform writing.
+            _checkRef = _ref.child('users/' + _provider);
+            _checkRef.once('value', function (snapshot) {
+              console.log('exisitng provider user? ' + snapshot.child(authData.uid).exists());
+              _notNewUser = snapshot.child(authData.uid).exists();
+
+              /*** removed checking existing email for those logged in via providers. */
+              // check for existing email user before perform writing.
+              // if (!_notNewUser) {
+              //   _checkRef = _ref.child('emails/');
+              //   _checkRef.once('value', function (snapshot) {
+              //     snapshot.forEach(function (data) {
+              //       // console.log(data.val());
+              //       // console.log(authData[_provider].email);
+              //       console.log('existing Semafloor user? ', data.val() === authData[_provider].email);
+              //       if (data.val() === authData[_provider].email) {
+              //         _notNewUser = true;
+              //
+              //         // stop looping.
+              //         return true;
+              //       }
+              //     });
+              //
+              //     // end-of-for-each-loop.
+              //
+              //   });
+              // }
+
+              // if the execution reaches here, write new user data.
+              if (!_notNewUser) {
+                console.log('new-user-write-user-data');
+                // needs to combine with password in signup behavior.
+                if (_provider !== 'password') {
+                  // save user data into firebase.
+                  if (authData) {
+                    // console.log(authData.uid === userData.uid);
+                    // console.log(authData.uid);
+                    // window.navigator.geolocation.getCurrentPosition(function (location) {
+                    //   var _lat = 0, _long = 0;
+                    //   if (location) {
+                    //     _lat = location.coords.latitude.toFixed(3);
+                    //     _long = location.coords.longitude.toFixed(3);
+                    //   }
+                    //
+                    //   // console.log(_semafloorRef.child(userData.uid));
+                    //   // console.log(userData, location.coords);
+                    //   // _semafloorRef.offAuth(_saveUserDataCallback);
+                    //   // _semafloorRef.unauth();
+                    // });
+                      // createdLocation: {
+                      //   lat: _lat,
+                      //   long: _long
+                      // }
+
+                    // only google & twitter do not have email in the authData object.
+                    _ref.child('users/' + authData.provider).child(authData.uid).set({
+                      email: authData[_provider].email || 'no-specified-email',
+                      provider: authData.provider,
+                      displayName: authData[_provider].displayName.replace(/@.*/, ''),
+                      createdTime: Firebase.ServerValue.TIMESTAMP,
+                    });
+
+                    /*** removed writing email for those logged in via providers. */
+                    // collect all emails.
+                    // _ref.child('emails').push(authData[_provider].email);
+                  }
+                }
+              }
+            });
+
+
+            // always set the property binding from the authData.
+            // workaround when refresh the page, all values will be vanished.
+            _self.set('status', true);
+            _self.set('user', authData);
+          }else {
+            // workaround to logout and switch back to login page.
+            _self.fire('logout-approved-login');
+            console.log('logged-out-from-approved-login-page...');
+          }
+        });
+      },
+
+      _logoutApprovedLogin: function (ev) {
+        _ref.unauth();
+        this.fire('logout-approved-login');
+      },
+
+      _computeProviderName: function (_provider) {
+        switch (_provider) {
+          case 'facebook':
+            this.set('_loginDisplayName', this.user.facebook.displayName);
+            break;
+          case 'twitter':
+            this.set('_loginDisplayName', this.user.twitter.displayName);
+            break;
+          case 'google':
+            this.set('_loginDisplayName', this.user.google.displayName);
+            break;
+          case 'github':
+            this.set('_loginDisplayName', this.user.github.displayName);
+            break;
+          case 'password':
+            this.set('_loginDisplayName', this.user.password.email);
+            break;
+          default:
+            console.warn('Error: unkown ' + _provider);
+        }
+      },
+
+    });
+  </script>
+</dom-module>

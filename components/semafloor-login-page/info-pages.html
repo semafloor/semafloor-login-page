@@ -1,0 +1,151 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="info-pages-theme.html">
+
+<link rel="import" href="../paper-slider/paper-slider.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+<link rel="import" href="../neon-animation/neon-animations.html">
+
+<link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="../neon-animation/neon-animated-pages.html">
+<link rel="import" href="../neon-animation/animations/hero-animation.html">
+<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
+
+<dom-module id="info-pages">
+  <template strip-whitespace>
+    <style include="info-pages-theme"></style>
+
+    <div id="placeholder" class="fit"></div>
+
+    <neon-animated-pages id="infoPages" class="layout vertical flex-auto"
+      selected="{{_infoPage}}"
+      entry-animation="[[_entryAnimation]]"
+      exit-animation="[[_exitAnimation]]"
+      attr-for-selected="data-info">
+      <div class="page-one" data-info="one">
+        <h1>Page One</h1>
+        <p>
+          Lorem ipsum dolor sit amet.
+        </p>
+      </div>
+      <div class="page-two" data-info="two">
+        <h1>Page Two</h1>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, totam.
+        </p>
+      </div>
+      <div class="page-three" data-info="three">
+        <h1>Page Three</h1>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit recusandae illo, aliquid sunt id sit provident. Placeat, corporis nostrum. Fugit.
+        </p>
+        <paper-button id="goLoginButton" class="go-login-button"
+          raised on-tap="_goLoginPage">Get Started</paper-button>
+      </div>
+    </neon-animated-pages>
+    <div class="info-page-indicator-container layout horizontal center-center">
+      <paper-slider id="infoPageIndicator" class="page-indicator"
+        min="0" max="2" value="0" max-markers="3" snaps noink disabled></paper-slider>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'info-pages',
+
+      behaviors: [Polymer.NeonSharedElementAnimatableBehavior],
+
+      properties: {
+        _infoPage: {
+          type: String,
+          value: 'one'
+        },
+        animationConfig: {
+          value: function() {
+            return {
+              'entry': {
+                name: 'scale-up-animation',
+                node: this
+              },
+              'exit': [{
+                name: 'fade-out-animation',
+                node: this,
+                timing: {
+                  // delay: 150,
+                  // duration: 0
+                }
+              }, {
+                name: 'ripple-animation',
+                id: 'infoToLogin',
+                fromPage: this
+              }]
+            }
+          }
+        },
+
+        sharedElements: {
+          value: function() {
+            return {
+              'infoToLogin': this.$.goLoginButton
+            }
+          }
+        },
+
+        _entryAnimation: String,
+        _exitAnimation: String,
+
+      },
+
+      _btn: function (ev) {
+        var _target = ev.target;
+        if (_target.tagName === 'BUTTON') {
+          if (_target.hasAttribute('data-btn')) {
+            var _info = _target.getAttribute('data-btn');
+            if (_info === 'prev' && this._infoPage !== 'one') {
+              this._previousInfoPage();
+            }else if (_info === 'next' && this._infoPage !== 'three' ){
+              this._nextInfoPage();
+            }
+          }
+        }
+      },
+
+      nextInfoPage: function () {
+        if (this._infoPage === 'three') {
+          return;
+        }
+
+        this.$.infoPages.cancelAnimation();
+        this._entryAnimation = 'slide-from-right-animation';
+        this._exitAnimation = 'slide-left-animation';
+        this.$.infoPages.selectNext();
+        this.pageIndicatorIncrement();
+      },
+
+      previousInfoPage: function () {
+        if (this._infoPage === 'one') {
+          return;
+        }
+
+        this.$.infoPages.cancelAnimation();
+        this._entryAnimation = 'slide-from-left-animation';
+        this._exitAnimation = 'slide-right-animation';
+        this.$.infoPages.selectPrevious();
+        this.pageIndicatorDecrement();
+      },
+
+      _goLoginPage: function (ev) {
+        console.log('info-page-to-login-page');
+        this.fire('show-login-pages');
+      },
+
+      pageIndicatorIncrement: function() {
+        this.$.infoPageIndicator.increment();
+      },
+
+      pageIndicatorDecrement: function() {
+        this.$.infoPageIndicator.decrement();
+      },
+
+    });
+  </script>
+</dom-module>

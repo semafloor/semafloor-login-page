@@ -1,0 +1,73 @@
+<script>
+  var Semafloor = Semafloor || {};
+  Semafloor.infoPagesBehavior = {
+    properties: {
+      _swipeNextAllowed: {
+        type: Boolean,
+        value: false
+      },
+      _swipePreviousAllowed: {
+        type: Boolean,
+        value: false
+      },
+      _swipeThreshold: Number,
+    },
+
+    _downHandler: function (ev) {
+      // this.setScrollDirection('all|x|y|none', node);
+      // console.log(ev);
+      var _target = ev.target;
+
+      if (_target) {
+        _target = _target.parentElement;
+        // set maximum distance needed to trigger page swipe.
+        this.set('_swipeThreshold', (parseFloat(_target.getBoundingClientRect().width) * 2 / 10).toFixed(0));
+      }
+    },
+
+    _trackHandler: function (ev) {
+      var _infoPages = this.$$('#infoPages'),
+          _threshold = this._swipeThreshold;
+
+      // both of which must be false.
+      if (this._swipeNextAllowed || this._swipePreviousAllowed) {
+        return;
+      }
+
+      switch (ev.detail.state) {
+        case 'start':
+
+          break;
+        case 'track':
+          if (ev.detail.dx < -_threshold) {
+              console.log('>');
+              this.set('_swipeNextAllowed', true);
+          }
+
+          if (ev.detail.dx > _threshold) {
+              console.log('<');
+              this.set('_swipePreviousAllowed', true);
+          }
+          break;
+        case 'end':
+
+          break;
+        default:
+
+      }
+    },
+
+    _upHandler: function (ev) {
+      var _infoPages = this.$$('#infoPages');
+      if (this._swipeNextAllowed) {
+        // console.log('fire-next');
+        this.fire('next-info-page');
+        this.set('_swipeNextAllowed', false);
+      } else if (this._swipePreviousAllowed) {
+        // console.log('fire-prev');
+        this.fire('prev-info-page');
+        this.set('_swipePreviousAllowed', false);
+      }
+    },
+  };
+</script>

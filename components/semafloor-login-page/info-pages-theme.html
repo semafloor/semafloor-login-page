@@ -1,0 +1,77 @@
+<dom-module id="info-pages-theme">
+  <template strip-whitespace>
+    <style>
+      :host {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+
+        display: block;
+        @apply(--layout-vertical);
+      }
+
+      *, *::before, *::after {
+        box-sizing: inherit;
+      }
+
+      #placeholder {
+        opacity: 0;
+        background: #ffffff;
+      }
+
+      .page-one {
+        padding: 40px;
+        background: #ffeb3b;
+        color: #000000;
+      }
+
+      .page-two {
+        padding: 40px;
+        background: #009688;
+        color: #ffffff;
+      }
+
+      .page-three {
+        padding: 40px;
+        background: #03a9f4;
+        color: #ffb74d;
+      }
+
+      .info-page-indicator-container {
+        position: absolute;
+        bottom: 16px;
+        left: 0;
+        right: 0;
+      }
+
+      paper-slider.page-indicator {
+        --paper-slider-bar-color: transparent;
+        --paper-slider-active-color: transparent;
+        --paper-slider-secondary-color: transparent;
+        --paper-slider-disabled-active-color: transparent;
+        --paper-slider-disabled-secondary-color: transparent;
+        /*--paper-slider-disabled-knob-color: var(--google-blue-700);*/
+        --paper-slider-disabled-knob-color: #ffffff;
+        --paper-progress-container-color: transparent;
+        --paper-slider-knob-color: var(--google-blue-700);
+        --paper-slider-knob-start-color: var(--google-blue-700);
+        --paper-slider-knob-start-border-color: transparent;
+      }
+
+      paper-button.go-login-button {
+        color: #009688;
+        background: #ffffff;
+        --paper-button-ink-color: transparent;
+      }
+
+
+    </style>
+
+  </template>
+</dom-module>

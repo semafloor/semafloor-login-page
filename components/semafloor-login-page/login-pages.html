@@ -1,0 +1,328 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="login-pages-theme.html">
+
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="../iron-form/iron-form.html">
+
+<link rel="import" href="../paper-ripple/paper-ripple.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+
+<link rel="import" href="../firebase-element/firebase-auth.html">
+
+<link rel="import" href="../neon-animation/neon-shared-element-animatable-behavior.html">
+<link rel="import" href="../neon-animation/animations/hero-animation.html">
+<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="dialog-slide-from-bottom-animation.html">
+
+
+<link rel="import" href="../neon-animation/neon-animations.html">
+
+<dom-module id="login-pages">
+  <template strip-whitespace>
+    <style include="login-pages-theme"></style>
+
+    <div id="placeholder" class="fit"></div>
+
+    <firebase-auth id="firebaseLogin"
+      provider="[[_providerToLogin]]"
+      location="https://semafloor-webapp.firebaseio.com"
+      redirect
+      user="{{_userLoginAuth}}"
+      status-known="{{_userStatusKnown}}"
+      on-login="_onFirebaseLogin"
+      on-error="_onFirebaseError"></firebase-auth>
+
+    <div id="loginPagesContainer" class="login-pages-container layout vertical flex-auto">
+      <div class="product-image-container layout vertical center-center">
+        <iron-image class="product-image" src="product_image_192.png" preload sizing="cover" fade></iron-image>
+        <p class="product-brief-description">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium iure odio nesciunt, sequi ut expedita.
+        </p>
+      </div>
+
+      <div class="login-form-container">
+        <form id="loginForm" is="iron-form" class="semafloor-login-form"
+          action="/semafloor-login" method="post">
+          <paper-input class="semafloor-login-input" name="email" label="Email Address"
+            type="text"
+            auto-validate
+            required
+            error-message="Invalid Email Address!"
+            pattern="\w\S+@\w\S+\.\S+"></paper-input>
+          <paper-input class="semafloor-login-input" name="password" label="Password"
+            type="password"
+            auto-validate
+            required error-message="Password required!"></paper-input>
+          <!-- <paper-checkbox id="loginCheckbox" class="semafloor-login-checkbox layout horizontal center-center" name="remember">Login Automatically</paper-checkbox> -->
+          <div class="semafloor-login-button-wrapper layout horizontal center-center">
+            <paper-button class="semafloor-login-button" on-down="_buttonDown" on-up="_buttonUp" data-icon="password" raised>Login</paper-button>
+          </div>
+          <div class="forgot-password layout horizontal center-center">
+            <span>Forgot password? </span>
+            <paper-button class="forgot-password-button" on-tap="_resetPassword">Reset password</paper-button>
+          </div>
+
+          <div class="provider-login-separator">
+            <hr>
+            <span>OR <span class="small-text">login with: </span></span>
+          </div>
+        </form>
+      </div>
+
+      <div id="providerSelectionContainer" class="social-sites-container layout horizontal around-justified wrap center"  on-down="_iconDown" on-up="_iconUp">
+        <iron-image class="facebook-icon"
+          data-icon="facebook"
+          src="social-sites-icons/facebook.png" preload sizing="cover" fade>
+          <paper-ripple></paper-ripple>
+        </iron-image>
+        <iron-image class="twitter-icon"
+          data-icon="twitter"
+          src="social-sites-icons/twitter.png" preload sizing="cover" fade>
+          <paper-ripple></paper-ripple>
+        </iron-image>
+        <iron-image class="gplus-icon"
+          data-icon="google"
+          src="social-sites-icons/gplus.png" preload sizing="cover" fade>
+          <paper-ripple></paper-ripple>
+        </iron-image>
+        <iron-image class="github-icon"
+          data-icon="github"
+          src="social-sites-icons/github.png" preload sizing="cover" fade>
+          <paper-ripple></paper-ripple>
+        </iron-image>
+        <!-- <iron-image class="email-icon"
+          data-icon="email"
+          src="social-sites-icons/email.png" preload sizing="cover" fade>
+          <paper-ripple></paper-ripple>
+        </iron-image> -->
+      </div>
+      <div class="create-new-account layout horizontal center-center">
+        <span>Don't have an account? </span>
+        <paper-button class="sign-up-button" on-tap="_createNewAccount">Sign up</paper-button>
+      </div>
+    </div>
+
+    <paper-toast id="signupToast" text=""></paper-toast>
+    <paper-dialog id="resetPasswordDialog" with-backdrop entry-animation="dialog-slide-from-bottom-animation" exit-animation="fade-out-animation">
+      <div class="paper-dialog-container">
+        <h2>Reset Password</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, numquam! Tempore voluptatum praesentium atque ipsum voluptatibus quis dolore, restablecer la contraseña.
+          <paper-input class="semafloor-login-input" label="Reset email address"
+            type="text"
+            auto-validate
+            invalid="{{_invalidResetEmail}}"
+            value="{{_resetEmail::input}}"
+            error-message="Invalid Email Address!"
+            pattern="\w\S+@\w\S+\.\S+"></paper-input>
+        </p>
+      </div>
+      <div class="buttons reset-password-buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm on-tap="_confirmResetPassword">Reset</paper-button>
+      </div>
+    </paper-dialog>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'login-pages',
+
+      behaviors: [Polymer.NeonSharedElementAnimatableBehavior],
+
+      properties: {
+        animationConfig: {
+          value: function () {
+            return {
+              'entry': [{
+                name: 'ripple-animation',
+                id: 'infoToLogin',
+                toPage: this
+              }, {
+                name: 'fade-out-animation',
+                node: this.$.placeholder,
+                timing: {
+                  delay: 500,
+                  duration: 0
+                }
+              }, {
+                name: 'fade-in-animation',
+                node: this.$.loginPagesContainer,
+                timing: {
+                  delay: 500,
+                  duration: 100
+                }
+              }, {
+                name: 'fade-in-animation',
+                node: this.$.providerSelectionContainer,
+                timing: {
+                  delay: 550,
+                  duration: 50
+                }
+              }],
+              'exit': []
+            }
+          }
+        },
+
+        sharedElements: {
+          value: function () {
+            return {
+              'infoToLogin': this.$.placeholder,
+              'providerToLogin': this
+            }
+          }
+        },
+
+        _userLoginAuth: Object,
+        _userStatusKnown: Boolean,
+        _providerToLogin: String,
+        _fromSignupPage: Boolean,
+        _resetEmail: String,
+        _invalidResetEmail: Boolean,
+
+      },
+
+      listeners: {
+        'iron-form-presubmit': '_onIronFormPresubmit',
+        'password-reset': '_onPasswordReset'
+      },
+
+      _iconDown: function (ev) {
+        var _imgTarget = ev.target;
+
+        while (_imgTarget && _imgTarget.tagName !== 'IRON-IMAGE') {
+          _imgTarget = _imgTarget.parentElement;
+        }
+
+        if (_imgTarget) {
+          this.set('_providerToLogin', _imgTarget.getAttribute('data-icon'));
+        }
+      },
+
+      _iconUp: function (ev) {
+        // console.log('icon-up', ev);
+
+        // or it will login as anonymous.
+        if (this._providerToLogin) {
+          this.$.firebaseLogin.login();
+          console.log('firebase-login');
+        }
+      },
+
+      _onIronFormPresubmit: function (ev) {
+        // console.log(ev.target.request.body);
+        var _body = ev.target.request.body;
+        ev.preventDefault();
+        this.$.firebaseLogin.login({
+          email: _body.email,
+          password: _body.password
+        });
+      },
+
+      _buttonDown: function (ev) {
+        // console.log(ev);
+        var _target = ev.target;
+
+        if (_target.tagName === 'PAPER-BUTTON') {
+          this.set('_providerToLogin', _target.getAttribute('data-icon'));
+        }
+      },
+
+      _buttonUp: function (ev) {
+        console.log('btn-up:', ev);
+        // or it will login as anonymous.
+        if (this._providerToLogin) {
+          this.$.loginForm.submit();
+        }
+      },
+
+      updateAnimationConfigFromProviderToLogin: function (_providerName) {
+        // to be removed.
+        if (_providerName) {
+          this.animationConfig.entry.push({
+            name: 'hero-animation',
+            id: 'providerToLogin',
+            toPage: this
+          }, {
+            name: 'fade-in-animation',
+            node: this
+          });
+        }else {
+          // console.log('no-entry-animation-at-login-page');
+          this.set('animationConfig.entry', []);
+        }
+      },
+
+      _createNewAccount: function (ev) {
+        var _target = ev.target;
+
+        while (_target && _target.tagName !== 'PAPER-BUTTON') {
+          _target = _target.parentElement;
+        }
+
+        this.fire('show-signup-page');
+      },
+
+      updateToastText: function (_text) {
+        this.$.signupToast.text = _text;
+        this.async(function () {
+          console.log('error-or-success-show-toast');
+          this.$.signupToast.show();
+        }, 500);
+      },
+
+      _onFirebaseError: function (ev) {
+        console.log(ev.detail.code + ': ' + ev.detail.message);
+        this.$.signupToast.text = ev.detail.code + ': ' + ev.detail.message;
+        this.$.signupToast.show();
+      },
+
+      _onFirebaseLogin: function (ev) {
+        console.log('login-pages-on-login');
+
+        // divert to approved login page from this page.
+        // else signup page will trigger this (investigation ongoing).
+        // only password login on login-page will retain _providerToLogin.
+        // password login from signup page will not make this truthy.
+        if (ev.detail.user.provider === 'password' && !this._providerToLogin) {
+          console.log('from-signup-page-goes-here');
+          return;
+        }
+
+        console.log('login-from-this-page-goes-here');
+        this.fire('show-approved-login', {user: this._userLoginAuth, status: this._userStatusKnown});
+      },
+
+      _resetPassword: function (ev) {
+        console.log('Reset Password? ');
+        this.$.resetPasswordDialog.open();
+      },
+
+      _confirmResetPassword: function (ev) {
+        // console.log(ev);
+        var _target = ev.target;
+        if (_target && _target.tagName === 'PAPER-BUTTON') {
+          if (_target.hasAttribute('dialog-confirm')) {
+            if (this._resetEmail && !this._invalidResetEmail) {
+              this.$.firebaseLogin.sendPasswordResetEmail(this._resetEmail);
+            }else {
+              this.updateToastText('Invalid reset email! Please try again.');
+            }
+
+            // reset input and invalid input.
+            this._resetEmail = '';
+            this._validResetEmail = false;
+          }
+        }
+      },
+
+      _onPasswordReset: function (ev) {
+        this.updateToastText('Password reset email sent successfully!')
+      },
+
+    });
+  </script>
+</dom-module>

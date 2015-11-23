@@ -1,0 +1,52 @@
+{
+  "name": "semafloor-login-page",
+  "authors": [
+    "Anonymous <anonymous@example.com>"
+  ],
+  "description": "An element providing a solution to no problem in particular.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "main": "semafloor-login-page.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.1.0",
+    "paper-dialog": "PolymerElements/paper-dialog#~1.0.2",
+    "paper-slider": "PolymerElements/paper-slider#~1.0.8",
+    "paper-radio-button": "PolymerElements/paper-radio-button#~1.0.11",
+    "paper-radio-group": "PolymerElements/paper-radio-group#~1.0.6",
+    "paper-header-panel": "PolymerElements/paper-header-panel#~1.0.5",
+    "iron-image": "PolymerElements/iron-image#~1.0.3",
+    "paper-fab": "PolymerElements/paper-fab#~1.0.6",
+    "paper-toolbar": "PolymerElements/paper-toolbar#~1.0.4",
+    "iron-form": "PolymerElements/iron-form#~1.0.12",
+    "paper-checkbox": "PolymerElements/paper-checkbox#~1.0.14",
+    "paper-icon-button": "PolymerElements/paper-icon-button#~1.0.5",
+    "paper-scroll-header-panel": "PolymerElements/paper-scroll-header-panel#~1.0.11",
+    "paper-dialog-scrollable": "PolymerElements/paper-dialog-scrollable#~1.0.1",
+    "firebase-element": "GoogleWebComponents/firebase-element#~1.0.8",
+    "paper-toast": "PolymerElements/paper-toast#~1.0.0",
+    "iron-localstorage": "PolymerElements/iron-localstorage#~1.0.5"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "*"
+  },
+  "_release": "77d206d021",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "77d206d0214751197cee18a676f228b5cdd5e143"
+  },
+  "_source": "git://github.com/semafloor/semafloor-login-page.git",
+  "_target": "master",
+  "_originalSource": "semafloor/semafloor-login-page",
+  "_direct": true
+}

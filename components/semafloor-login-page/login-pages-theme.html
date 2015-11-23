@@ -1,0 +1,204 @@
+<dom-module id="login-pages-theme">
+  <template strip-whitespace>
+    <style>
+      :host {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+
+        display: block;
+        overflow: auto;
+        padding: 40px 0;
+        @apply(--layout-vertical);
+      }
+
+      *, *::before, *::after {
+        box-sizing: inherit;
+      }
+
+      .login-pages-container {
+      }
+
+      #placeholder {
+        opacity: 0;
+        background: #ffffff;
+        /*background: #000000;*/
+        pointer-events: none;
+      }
+
+      iron-image.product-image {
+        background: transparent;
+        width: 128px;
+        height: 128px;
+      }
+
+      p.product-brief-description {
+        padding-left: 40px;
+        padding-right: 40px;
+        text-align: justify;
+      }
+
+      div.login-form-container {
+        margin-left: 40px;
+        margin-right: 40px;
+        margin-bottom: 24px;
+      }
+
+      paper-input.semafloor-login-input {
+        --paper-input-container-focus-color: #009688;
+        --paper-input-container-input-color: #009688;
+      }
+      /*paper-checkbox.semafloor-login-checkbox {
+        margin-top: 24px;
+        margin-bottom: 24px;
+        font-size: 85%;
+        --paper-checkbox-checked-color: #009688;
+        --paper-checkbox-checked-ink-color: #009688;
+      }*/
+
+      .semafloor-login-button-wrapper {
+        margin-top: 24px;
+        margin-bottom: 12px;
+      }
+
+      div.provider-login-separator {
+        color: #7e7e7e;
+        padding-top: 24px;
+        padding-top: 24px;
+        text-align: center;
+        font-size: 85%;
+        font-weight: bold;
+      }
+
+      div.provider-login-separator
+      span {
+        color: #000000;
+      }
+
+      div.provider-login-separator
+      span
+      span.small-text {
+        color: #7e7e7e;
+        font-size: 90%;
+        font-weight: normal;
+      }
+
+      div.semafloor-login-button-wrapper
+      paper-button.semafloor-login-button {
+        color: #ffffff;
+        background: #009688;
+        border-radius: 50px;
+        font-weight: bold;
+      }
+
+      div.social-sites-container {
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+
+      iron-image.facebook-icon,
+      iron-image.twitter-icon,
+      iron-image.gplus-icon,
+      iron-image.github-icon,
+      iron-image.email-icon {
+        /*box-sizing: content-box;*/
+        margin: 12px;
+        width: 72px;
+        height: 72px;
+        background: transparent;
+        border-radius: 50%;
+        @apply(--shadow-elevation-3dp);
+        @apply(--shadow-transition);
+      }
+
+      iron-image.facebook-icon.pressed,
+      iron-image.twitter-icon.pressed,
+      iron-image.gplus-icon.pressed,
+      iron-image.github-icon.pressed,
+      iron-image.email-icon.pressed {
+        @apply(--shadow-elevation-8dp);
+      }
+
+      iron-image.email-icon {
+        /*color: #1A237E;*/
+        color: #ffff00;
+      }
+
+      iron-image.facebook-icon {
+        /*color: #29B6F6;*/
+        color: #76ff03;
+      }
+
+      iron-image.github-icon {
+        color: #D14338;
+      }
+
+      iron-image.gplus-icon {
+        /*color: #000000;*/
+        color: #ffffff;
+      }
+
+      iron-image.twitter-icon {
+        /*color: #009688;*/
+        color: #7c4dff;
+      }
+
+      div.create-new-account {
+        color: #9e9e9e;
+        margin-top: 24px;
+        font-size: 80%;
+      }
+      paper-button.sign-up-button {
+        color: #009688;
+        border-radius: 50px;
+        padding: 6px;
+        text-transform: none;
+        font-weight: normal;
+      }
+
+      div.forgot-password {
+        color: #9e9e9e;
+        font-size: 80%;
+      }
+      paper-button.forgot-password-button {
+        color: #009688;
+        border-radius: 50px;
+        padding: 6px;
+        text-transform: none;
+        font-weight: normal;
+      }
+
+      /* @media needed!!! */
+      paper-toast {
+        bottom: 0;
+        left: 0;
+        text-align: left;
+      }
+
+      paper-dialog
+      div.paper-dialog-container
+      h2 {
+        color: #009688;
+      }
+      paper-dialog
+      div.reset-password-buttons {
+        color: #009688;
+      }
+
+      /*paper-fab {
+        --paper-fab-iron-icon {
+          --iron-icon-width: 100%;
+          --iron-icon-height: 100%;
+        }
+      }*/
+
+    </style>
+
+  </template>
+</dom-module>
